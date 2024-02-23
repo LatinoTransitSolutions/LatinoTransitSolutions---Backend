@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import CityModel from "../database/models/CityModel"
+import CityModel from "../database/models/CityModel.ts"
 import Connection from "../database/connection/ConnectionInterface.ts"
 import BaseModel from "../database/models/ModelInterface.ts"
 import BaseResponse from "../common/BaseResponse.ts"
@@ -29,7 +29,7 @@ class CityController {
    * respuesta que va llegar al emisor
    *
    * Nota: Fijarse que estos métodos son de tipo
-   * arrow functions y esto está hecho a proposito para
+   * arrow functions y esto está hecho a propósito para
    * que en el enrutador no haya problemas con pasar la
    * función de esta forma: --- controller.getAll ---
    */

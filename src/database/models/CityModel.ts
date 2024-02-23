@@ -1,5 +1,5 @@
-import Connection from "../connection/ConnectionInterface"
-import Model from "./ModelInterface"
+import Connection from "../connection/ConnectionInterface.ts"
+import Model from "./ModelInterface.ts"
 
 /**
  * Este modelo recibe la conexión la cual le

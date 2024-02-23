@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express"
 import { PoolConnection, SqlError } from "mariadb"
 import db from "../database/db.ts"
+import authMiddleware from "../middleware/auth.ts"
+
 import BaseResponse from "../common/BaseResponse.ts"
 import MariaDBConnection from "../database/connection/MariaDBConnection.ts"
 import CityModel from "../database/models/CityModel.ts"
@@ -78,9 +80,9 @@ router.route("/all3").get((req: Request, res: Response) => {
  * llamado "getAll" el cual ejecuta dentro de él el res.send()
  */
 const controller = new CityController(new MariaDBConnection())
-router.get("/all", controller.getAll)
-router.post("/create", controller.create)
-router.put("/update", controller.update)
-router.delete("/delete", controller.delete)
+router.get("/all", authMiddleware, controller.getAll)
+router.post("/create", authMiddleware, controller.create)
+router.put("/update", authMiddleware, controller.update)
+router.delete("/delete", authMiddleware, controller.delete)
 
 export default router

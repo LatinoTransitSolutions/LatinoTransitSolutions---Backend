@@ -1,4 +1,4 @@
-import { SqlError } from "mariadb"
+import { SqlError, PoolConnection } from "mariadb"
 import db from "../db.ts"
 import BaseException from "../../common/BaseException.ts"
 import Connection from "./ConnectionInterface.ts"
@@ -27,10 +27,10 @@ class MariaDBConnection implements Connection {
   public execute(_query: string): Promise<Array<unknown>> {
     return new Promise((resolve, reject) => {
       db.getConnection()
-        .then((connection) => {
+        .then((connection: PoolConnection) => {
           connection
             .query(_query)
-            .then((results) => {
+            .then((results: Array<unknown>) => {
               connection.release()
               resolve(results)
             })
