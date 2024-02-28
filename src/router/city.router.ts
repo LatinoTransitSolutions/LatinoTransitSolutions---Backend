@@ -85,4 +85,9 @@ router.post("/create", authMiddleware, controller.create)
 router.put("/update", authMiddleware, controller.update)
 router.delete("/delete", authMiddleware, controller.delete)
 
+//http:localhost:8080/api/city/all
+//http:localhost:8080/api/city/create
+//http:localhost:8080/api/city/update
+//http:localhost:8080/api/city/delete
+
 export default router
