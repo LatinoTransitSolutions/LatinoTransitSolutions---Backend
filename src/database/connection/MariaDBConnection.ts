@@ -7,7 +7,15 @@ import Connection from "./ConnectionInterface.ts"
  * Clase que permite hacer la conexión con MariaDB
  */
 class MariaDBConnection implements Connection {
-  constructor() {}
+  private static instance: MariaDBConnection
+
+  public static getInstance(): MariaDBConnection {
+    if (!this.instance) {
+      this.instance = new MariaDBConnection()
+    }
+
+    return this.instance
+  }
 
   /**
    * Método que permite hacer la conexión y una vez
@@ -17,7 +25,7 @@ class MariaDBConnection implements Connection {
    * para la petición para que se pueda volver a usar
    *
    * Se retorna una promesa para cuando la base de datos
-   * responda pueda enviarse los resultados
+   * responda, pueda enviar los resultados
    *
    * En caso de error se responde con el error procesado
    * por medio de la clase "BaseException" y se hace un
