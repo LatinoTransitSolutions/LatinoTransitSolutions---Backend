@@ -24,12 +24,12 @@ class MariaDBConnection implements Connection {
    * console log del error para tener toda la info del
    * error
    */
-  public execute(_query: string): Promise<Array<unknown>> {
+  public execute(_query: string, _values: any[] = []): Promise<Array<unknown>> {
     return new Promise((resolve, reject) => {
       db.getConnection()
         .then((connection: PoolConnection) => {
           connection
-            .query(_query)
+            .query(_query, _values)
             .then((results: Array<unknown>) => {
               connection.release()
               resolve(results)
