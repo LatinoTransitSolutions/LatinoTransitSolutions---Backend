@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import CityModel from "../database/models/CityModel.ts"
 import Connection from "../database/connection/ConnectionInterface.ts"
-import BaseModel from "../database/models/ModelInterface.ts"
+import Model from "../database/models/ModelInterface.ts"
 import BaseResponse from "../common/BaseResponse.ts"
 
 /**
@@ -12,7 +12,7 @@ import BaseResponse from "../common/BaseResponse.ts"
  * getAll, getById, getOne, create, update, delete
  */
 class CityController {
-  model: BaseModel
+  model: Model
 
   constructor(_connection: Connection) {
     this.model = new CityModel(_connection)
@@ -44,16 +44,6 @@ class CityController {
       })
   }
 
-  public getAllCallback = (req: Request, res: Response) => {
-    this.model.getAllCallback(({ error, results }) => {
-      if (error) {
-        res.send(BaseResponse.error(error))
-      } else {
-        res.send(BaseResponse.success(results))
-      }
-    })
-  }
-
   public getById = (req: Request, res: Response) => {
     this.model.getById(req.body.id)
   }
@@ -63,15 +53,15 @@ class CityController {
   }
 
   public create = (req: Request, res: Response) => {
-    this.model.create()
+    this.model.create({})
   }
 
   public update = (req: Request, res: Response) => {
-    this.model.update()
+    this.model.update({})
   }
 
   public delete = (req: Request, res: Response) => {
-    this.model.delete()
+    this.model.delete(0)
   }
 }
 

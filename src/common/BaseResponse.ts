@@ -74,14 +74,10 @@ class Response {
   }
 
   static success(_data: unknown | undefined = undefined, _message: string | undefined = undefined) {
-    if (Array.isArray(_data) && _data.length <= 1) {
-      _data = _data[0] || null
-    }
-
     return {
       ok: true,
       message: _message,
-      data: _data
+      data: _data ?? undefined
     }
   }
 
