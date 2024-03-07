@@ -1,6 +1,6 @@
-import VehicleInterface from "./TransportPlateInterface"
+import TransportPlate from "./TransportPlateInterface"
 
-class Pickup implements VehicleInterface {
+class Pickup implements TransportPlate {
   id: number
   name: string
   maxWidth: number

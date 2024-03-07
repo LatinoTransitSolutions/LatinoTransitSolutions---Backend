@@ -49,7 +49,7 @@ class BaseModel {
   public getInsertQuery(_values: object): any[] {
     _values = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
 
-    return [`INSERT INTO transport (${this.getColumns(_values).join(", ")}) values (${this.getInserts(_values)})`, this.getValues(_values)]
+    return [`INSERT INTO transport (${this.getColumns(_values).join(", ")}) VALUES (${this.getInserts(_values)})`, this.getValues(_values)]
   }
 
   /**
