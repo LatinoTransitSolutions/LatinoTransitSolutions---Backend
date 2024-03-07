@@ -1,4 +1,4 @@
-import { NewTransport, Transport } from "../../types/Transport"
+import { TransportType } from "../../types/Transport"
 import Connection from "../connection/ConnectionInterface.ts"
 import BaseModel from "./BaseModel.ts"
 import Model from "./ModelInterface.ts"
@@ -11,12 +11,11 @@ class TransportModel extends BaseModel implements Model {
     this.connection = _connection
   }
 
-  public getAll(): Promise<Transport[] | string> {
+  public getAll(): Promise<TransportType[] | string> {
     return new Promise((resolve, reject) => {
       this.connection
         .execute("SELECT * FROM transport")
-        .then((results: Transport[]) => {
-          console.log(results)
+        .then((results: TransportType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -54,7 +53,7 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public create(_values: NewTransport): Promise<object | string> {
+  public create(_values: object): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values)
 
     return new Promise((resolve, reject) => {
@@ -69,7 +68,7 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public update(_values: Transport): Promise<object | string> {
+  public update(_values: object): Promise<object | string> {
     const [query, values] = this.getUpdateQuery(_values)
 
     return new Promise((resolve, reject) => {

@@ -2,6 +2,7 @@ import TransportPlate from "./TransportPlateInterface"
 
 class Truck implements TransportPlate {
   id: number
+  type: string
   name: string
   maxWidth: number
   maxHeight: number
@@ -15,6 +16,14 @@ class Truck implements TransportPlate {
 
   public setId(_id: number): void {
     this.id = _id
+  }
+
+  public getType(): string {
+    return this.type
+  }
+
+  public setType(_type: string): void {
+    this.type = _type
   }
 
   public getName(): string {

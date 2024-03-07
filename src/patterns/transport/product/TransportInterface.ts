@@ -1,5 +1,6 @@
 interface TransportInterface {
   id: number
+  type: string
   name: string
   maxWidth: number
   maxHeight: number
@@ -8,6 +9,8 @@ interface TransportInterface {
 
   getId(): number
   setId(_id: number): void
+  getType(): string
+  setType(_type: string): void
   getName(): string
   setName(_name: string): void
   getMaxWidth(): number

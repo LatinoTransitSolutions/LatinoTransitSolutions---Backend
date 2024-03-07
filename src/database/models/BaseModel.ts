@@ -1,8 +1,4 @@
-import { Transport } from "../../types/Transport"
-
 class BaseModel {
-  constructor() {}
-
   /**
    * @param _values
    * @returns string
@@ -40,14 +36,40 @@ class BaseModel {
   /**
    *
    * @param _values
+   *
+   * Método que transforma las llaves de camel case a snake case
+   * para que coincidan con las columnas de la base de datos
+   */
+  private camelToSnake(_values: any): void {
+    Object.keys(_values).forEach((key) => {
+      const snakeCaseKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
+
+      if (key !== snakeCaseKey) {
+        _values[snakeCaseKey] = _values[key]
+        delete _values[key]
+      }
+    })
+  }
+
+  /**
+   *
+   * @param _values
    * @returns any[]
    *
    * Método que se encarga de crear una consulta SQL de tipo
    * "insert" estandarizada para no tener que escribirla cada
    * que se crea una nueva entidad
    */
-  public getInsertQuery(_values: object): any[] {
+  public getInsertQuery(_values: any): any[] {
+    /**
+     * Se filtra el array de valores para sacar todo lo que
+     * sea undefined y el id ya que no queremos insertar nada
+     * que no se le especifique un valor y tampoco la columna
+     * id ya que esta es autoincremental en la base de datos
+     */
     _values = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+
+    this.camelToSnake(_values)
 
     return [`INSERT INTO transport (${this.getColumns(_values).join(", ")}) VALUES (${this.getInserts(_values)})`, this.getValues(_values)]
   }
@@ -61,16 +83,12 @@ class BaseModel {
    * "update" estandarizada para no tener que escribirla cada
    * que se actualiza una entidad
    */
-  public getUpdateQuery(_values: Transport): any[] {
+  public getUpdateQuery(_values: any): any[] {
     const id = _values.id
 
-    /**
-     * Se filtra el array de valores para sacar todo lo que
-     * sea undefined y el id ya que no queremos modicar nada
-     * que no se le especifique un valor y tampoco la columna
-     * id que debe ser inmutable
-     */
     _values = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+
+    this.camelToSnake(_values)
 
     const columns = Object.keys(_values)
       .map((c) => `${c} = ?`)

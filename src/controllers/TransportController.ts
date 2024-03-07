@@ -1,9 +1,11 @@
 import { Request, Response } from "express"
+import { NewTransportType, TransportType } from "../types/Transport"
+import BaseResponse from "../common/BaseResponse.ts"
+
 import Connection from "../database/connection/ConnectionInterface.ts"
 import Model from "../database/models/ModelInterface.ts"
 import TransportModel from "../database/models/TransportModel.ts"
-import BaseResponse from "../common/BaseResponse.ts"
-import { NewTransport, Transport } from "../types/Transport"
+import TransportService from "../services/transport.ts"
 
 class TransportController {
   model: Model
@@ -16,6 +18,11 @@ class TransportController {
     this.model
       .getAll()
       .then((results) => {
+        results = results.map((val: TransportType) => {
+          const { id, type, name, max_width, max_height, max_length, max_weight, plate }: TransportType = val
+          return TransportService.createTransportEntity(id, type, name, max_width, max_height, max_length, max_weight, plate)
+        })
+
         res.send(BaseResponse.success(results))
       })
       .catch((error) => {
@@ -46,20 +53,27 @@ class TransportController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { type, name, max_width, max_height, max_length, max_weight }: NewTransport = req.body
+    const { type, name, max_width, max_height, max_length, max_weight, plate }: NewTransportType = req.body
 
-    this.model
-      .create({ type, name, max_width, max_height, max_length, max_weight })
-      .then((response) => {
-        res.send(BaseResponse.success(null, "Transport created successfully"))
-      })
-      .catch((error) => {
-        console.log(BaseResponse.error(error))
-      })
+    const transport = TransportService.createTransportEntity(undefined, type, name, max_width, max_height, max_length, max_weight, plate)
+
+    if (transport) {
+      this.model
+        .create(transport)
+        .then((response) => {
+          res.send(BaseResponse.success(null, "Transport created successfully"))
+        })
+        .catch((error) => {
+          console.log(error)
+          res.send(BaseResponse.error(error))
+        })
+    } else {
+      res.send(BaseResponse.error("Unexpected transport type"))
+    }
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, type, name, max_width, max_height, max_length, max_weight }: Transport = req.body
+    const { id, type, name, max_width, max_height, max_length, max_weight }: TransportType = req.body
 
     this.model
       .update({ id, type, name, max_width, max_height, max_length, max_weight })
@@ -72,7 +86,7 @@ class TransportController {
   }
 
   public delete = (req: Request, res: Response) => {
-    const { id }: Transport = req.body
+    const { id }: TransportType = req.body
 
     this.model
       .delete(id)

@@ -1,10 +1,10 @@
 interface ModelInterface {
-  getAll(): Promise<unknown>
-  getById(_id: string | number): Promise<unknown>
-  getOne(_target: object): Promise<unknown>
-  create(_object: object): Promise<unknown>
-  update(_object: object): Promise<unknown>
-  delete(_id: number): Promise<unknown>
+  getAll(): Promise<any>
+  getById(_id: number): Promise<any>
+  getOne(_target: object): Promise<any>
+  create(_object: object): Promise<any>
+  update(_object: object): Promise<any>
+  delete(_id: number): Promise<any>
 }
 
 export default ModelInterface

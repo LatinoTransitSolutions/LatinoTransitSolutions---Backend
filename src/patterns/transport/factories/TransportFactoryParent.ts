@@ -4,8 +4,9 @@ import TransportPlate from "../product/TransportPlateInterface"
 type TransportType = Transport | TransportPlate
 
 class TransportFactoryParent {
-  public setRequiredData(_transport: TransportType, _id: number | undefined = undefined, _name: string, _maxWidth: number, _maxHeight: number, _maxLength: number, _maxWeight: number) {
+  public setRequiredData(_transport: TransportType, _id: number | undefined = undefined, _type: string, _name: string, _maxWidth: number, _maxHeight: number, _maxLength: number, _maxWeight: number) {
     _transport.setId(_id)
+    _transport.setType(_type)
     _transport.setName(_name)
     _transport.setMaxWidth(_maxWidth)
     _transport.setMaxHeight(_maxHeight)

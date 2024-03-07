@@ -1,4 +1,4 @@
-export type Transport = {
+export type TransportType = {
   id: number
   type: string
   name: string
@@ -6,6 +6,7 @@ export type Transport = {
   max_height: number
   max_length: number
   max_weight: number
+  plate: string
 }
 
-export type NewTransport = Omit<Transport, "id">
+export type NewTransportType = Omit<TransportType, "id">
