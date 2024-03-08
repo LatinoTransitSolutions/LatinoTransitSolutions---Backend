@@ -1,12 +1,12 @@
 import { TransportsTypes } from "../enums/Transport.ts"
-import TransportFactory from "../patterns/transport/factories/TransportFactory.ts"
-import TransportPlateFactory from "../patterns/transport/factories/TransportPlateFactory.ts"
-import Transport from "../patterns/transport/product/TransportInterface.ts"
-import TransportPlate from "../patterns/transport/product/TransportPlateInterface.ts"
-import WalkingFactory from "../patterns/transport/factories/WalkingFactory.ts"
-import MotorcycleFactory from "../patterns/transport/factories/MotorcycleFactory.ts"
-import PickupFactory from "../patterns/transport/factories/PickupFactory.ts"
-import TruckFactory from "../patterns/transport/factories/TruckFactory.ts"
+import TransportFactory from "../transport/factories/TransportFactory.ts"
+import TransportPlateFactory from "../transport/factories/TransportPlateFactory.ts"
+import Transport from "../transport/product/TransportInterface.ts"
+import TransportPlate from "../transport/product/TransportPlateInterface.ts"
+import WalkingFactory from "../transport/factories/WalkingFactory.ts"
+import MotorcycleFactory from "../transport/factories/MotorcycleFactory.ts"
+import PickupFactory from "../transport/factories/PickupFactory.ts"
+import TruckFactory from "../transport/factories/TruckFactory.ts"
 
 class TransportService {
   public static createTransportEntity(_id: number | undefined = undefined, _type: string, _name: string, _maxWidth: number, _maxHeight: number, _maxLength: number, _maxWeight: number, _plate: string): Transport | TransportPlate {

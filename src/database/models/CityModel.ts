@@ -9,7 +9,7 @@ import Model from "./ModelInterface.ts"
  * la clase derivada de Connection (MariaDBConnection)
  */
 class CityModel implements Model {
-  connection: Connection
+  private connection: Connection
 
   constructor(_connection: Connection) {
     this.connection = _connection

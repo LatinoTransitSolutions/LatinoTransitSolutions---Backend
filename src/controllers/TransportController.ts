@@ -5,10 +5,10 @@ import BaseResponse from "../common/BaseResponse.ts"
 import Connection from "../database/connection/ConnectionInterface.ts"
 import Model from "../database/models/ModelInterface.ts"
 import TransportModel from "../database/models/TransportModel.ts"
-import TransportService from "../services/transport.ts"
+import TransportService from "../services/TransportService.ts"
 
 class TransportController {
-  model: Model
+  private model: Model
 
   constructor(_connection: Connection) {
     this.model = new TransportModel(_connection)
@@ -73,10 +73,10 @@ class TransportController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, type, name, max_width, max_height, max_length, max_weight }: TransportType = req.body
+    const { id, type, name, max_width, max_height, max_length, max_weight, plate }: TransportType = req.body
 
     this.model
-      .update({ id, type, name, max_width, max_height, max_length, max_weight })
+      .update({ id, type, name, max_width, max_height, max_length, max_weight, plate })
       .then((response) => {
         res.send(BaseResponse.success(null, "Transport updated successfully"))
       })
