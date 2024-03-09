@@ -67,11 +67,23 @@ class BaseModel {
      * que no se le especifique un valor y tampoco la columna
      * id ya que esta es autoincremental en la base de datos
      */
-    _values = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
 
-    this.camelToSnake(_values)
+    let newValues: any[] = []
+    let newColumns: any[] = []
 
-    return [`INSERT INTO transport (${this.getColumns(_values).join(", ")}) VALUES (${this.getInserts(_values)})`, this.getValues(_values)]
+    if (Array.isArray(_values)) {
+      newValues = _values.map((item) => {
+        item = JSON.parse(JSON.stringify(item, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+        return Object.values(item)
+      })
+      newColumns = JSON.parse(JSON.stringify(_values[0], (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+    } else {
+      newColumns = newValues = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+    }
+
+    this.camelToSnake(newColumns)
+
+    return [`INSERT INTO transport (${this.getColumns(newColumns).join(", ")}) VALUES (${this.getInserts(newColumns)})`, this.getValues(newValues)]
   }
 
   /**
