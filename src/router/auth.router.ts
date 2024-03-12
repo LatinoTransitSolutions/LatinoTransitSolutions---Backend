@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express"
-import { createToken } from "../services/auth.ts"
+import { createToken } from "../utils/auth.ts"
 import BaseResponse from "../common/BaseResponse.ts"
 
 const router: Router = Router()

@@ -7,7 +7,15 @@ import Connection from "./ConnectionInterface.ts"
  * Clase que permite hacer la conexión con MariaDB
  */
 class MariaDBConnection implements Connection {
-  constructor() {}
+  private static instance: MariaDBConnection
+
+  public static getInstance(): MariaDBConnection {
+    if (!this.instance) {
+      this.instance = new MariaDBConnection()
+    }
+
+    return this.instance
+  }
 
   /**
    * Método que permite hacer la conexión y una vez
@@ -17,20 +25,21 @@ class MariaDBConnection implements Connection {
    * para la petición para que se pueda volver a usar
    *
    * Se retorna una promesa para cuando la base de datos
-   * responda pueda enviarse los resultados
+   * responda, pueda enviar los resultados
    *
    * En caso de error se responde con el error procesado
    * por medio de la clase "BaseException" y se hace un
    * console log del error para tener toda la info del
    * error
    */
-  public execute(_query: string): Promise<Array<unknown>> {
+  public execute(_query: string, _values: any[] = [], _method: string = "query"): Promise<Array<unknown>> {
     return new Promise((resolve, reject) => {
       db.getConnection()
         .then((connection: PoolConnection) => {
-          connection
-            .query(_query)
-            .then((results: Array<unknown>) => {
+          const promiseResult = _method === "query" ? connection.query(_query, _values) : connection.batch(_query, _values)
+
+          promiseResult
+            .then((results: Array<any>) => {
               connection.release()
               resolve(results)
             })

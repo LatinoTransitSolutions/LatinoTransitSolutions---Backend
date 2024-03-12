@@ -1,11 +1,10 @@
 interface ModelInterface {
-  getAll(): Promise<unknown>
-  getAllCallback(callback: (object: { error?: string | null; results?: unknown }) => void): void
-  getById(id: string | number): Promise<unknown>
-  getOne(target: object): Promise<unknown>
-  create(): Promise<unknown>
-  update(): Promise<unknown>
-  delete(): Promise<unknown>
+  getAll(): Promise<any>
+  getById(_id: number): Promise<any>
+  getOne(_target: object): Promise<any>
+  create(_values: any): Promise<any>
+  update(_values: any): Promise<any>
+  delete(_id: number): Promise<any>
 }
 
 export default ModelInterface

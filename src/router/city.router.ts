@@ -45,7 +45,7 @@ router.route("/all1").get((req: Request, res: Response) => {
  * llamado "execute" el cual retorna una promesa
  */
 router.route("/all2").get((req: Request, res: Response) => {
-  const conn = new MariaDBConnection()
+  const conn = MariaDBConnection.getInstance()
   conn
     .execute("SELECT * FROM city LIMIT 10")
     .then((results: unknown) => {
@@ -64,7 +64,7 @@ router.route("/all2").get((req: Request, res: Response) => {
  * modelos
  */
 router.route("/all3").get((req: Request, res: Response) => {
-  const model = new CityModel(new MariaDBConnection())
+  const model = new CityModel(MariaDBConnection.getInstance())
   model
     .getAll()
     .then((results) => {
@@ -79,7 +79,7 @@ router.route("/all3").get((req: Request, res: Response) => {
  * Endpoint que implementa un controlador "CityControler" con un método estático
  * llamado "getAll" el cual ejecuta dentro de él el res.send()
  */
-const controller = new CityController(new MariaDBConnection())
+const controller = new CityController(MariaDBConnection.getInstance())
 router.get("/all", authMiddleware, controller.getAll)
 router.post("/create", authMiddleware, controller.create)
 router.put("/update", authMiddleware, controller.update)
