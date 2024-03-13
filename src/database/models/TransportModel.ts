@@ -57,7 +57,7 @@ class TransportModel extends BaseModel implements Model {
   }
 
   public create(_values: object): Promise<object | string> {
-    const [query, values] = this.getInsertQuery(_values)
+    const [query, values] = this.getInsertQuery(_values, "transport")
 
     return new Promise((resolve, reject) => {
       this.connection

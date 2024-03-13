@@ -60,7 +60,7 @@ class BaseModel {
    * "insert" estandarizada para no tener que escribirla cada
    * que se crea una nueva entidad
    */
-  public getInsertQuery(_values: any): any[] {
+  public getInsertQuery(_values: any, _table: string): any[] {
     /**
      * Se filtra el array de valores para sacar todo lo que
      * sea undefined y el id ya que no queremos insertar nada
@@ -83,7 +83,7 @@ class BaseModel {
 
     this.camelToSnake(newColumns)
 
-    return [`INSERT INTO transport (${this.getColumns(newColumns).join(", ")}) VALUES (${this.getInserts(newColumns)})`, this.getValues(newValues)]
+    return [`INSERT INTO ${_table} (${this.getColumns(newColumns).join(", ")}) VALUES (${this.getInserts(newColumns)})`, this.getValues(newValues)]
   }
 
   /**
