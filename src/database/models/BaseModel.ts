@@ -40,15 +40,30 @@ class BaseModel {
    * Método que transforma las llaves de camel case a snake case
    * para que coincidan con las columnas de la base de datos
    */
-  private camelToSnake(_values: any): void {
-    Object.keys(_values).forEach((key) => {
-      const snakeCaseKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
-
-      if (key !== snakeCaseKey) {
-        _values[snakeCaseKey] = _values[key]
-        delete _values[key]
-      }
+  private camelToSnake(_values: any): object {
+    const entries = Object.entries(_values).map(([key, value]) => {
+      key = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
+      return [key, value]
     })
+
+    return Object.fromEntries(entries)
+  }
+
+  /**
+   *
+   * @param _values
+   *
+   * Método que remueve las llaves que poseen como valor un
+   * undefiend (vacío) y la columna id
+   */
+  private cleanUpValues(_values: object): object {
+    const entries = Object.entries(_values)
+      .map(([key, value]) => {
+        return key !== "id" && value !== undefined ? [key, value] : undefined
+      })
+      .filter((val) => val)
+
+    return Object.fromEntries(entries)
   }
 
   /**
@@ -62,28 +77,28 @@ class BaseModel {
    */
   public getInsertQuery(_values: any, _table: string): any[] {
     /**
-     * Se filtra el array de valores para sacar todo lo que
-     * sea undefined y el id ya que no queremos insertar nada
-     * que no se le especifique un valor y tampoco la columna
+     * Se utiliza el método camelToSnake() para darle compatibilidad
+     * a los atributos escritos con camelCase de los objetos del
+     * código con los nombres de las columnas de las tablas que fueron
+     * escritas en snakeCase
+     */
+    const columns = this.camelToSnake(this.cleanUpValues(_values[0] || _values))
+
+    /**
+     * Se filtran los valores con el método cleanUp() para sacar
+     * todo lo que sea undefined y el id ya que no queremos insertar
+     * nada que no se le especifique un valor y tampoco la columna
      * id ya que esta es autoincremental en la base de datos
      */
-
-    let newValues: any[] = []
-    let newColumns: any[] = []
-
     if (Array.isArray(_values)) {
-      newValues = _values.map((item) => {
-        item = JSON.parse(JSON.stringify(item, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
-        return Object.values(item)
+      _values = _values.map((val) => {
+        return this.getValues(this.cleanUpValues(val))
       })
-      newColumns = JSON.parse(JSON.stringify(_values[0], (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
     } else {
-      newColumns = newValues = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+      _values = this.getValues(this.cleanUpValues(_values))
     }
 
-    this.camelToSnake(newColumns)
-
-    return [`INSERT INTO ${_table} (${this.getColumns(newColumns).join(", ")}) VALUES (${this.getInserts(newColumns)})`, this.getValues(newValues)]
+    return [`INSERT INTO ${_table} (${this.getColumns(columns).join(", ")}) VALUES (${this.getInserts(columns)})`, _values]
   }
 
   /**
@@ -95,18 +110,16 @@ class BaseModel {
    * "update" estandarizada para no tener que escribirla cada
    * que se actualiza una entidad
    */
-  public getUpdateQuery(_values: any): any[] {
+  public getUpdateQuery(_values: any, _table: string): any[] {
     const id = _values.id
 
-    _values = JSON.parse(JSON.stringify(_values, (key, value) => (key !== "id" && value !== undefined ? value : undefined)))
+    _values = this.camelToSnake(this.cleanUpValues(_values))
 
-    this.camelToSnake(_values)
-
-    const columns = Object.keys(_values)
+    const columns = this.getColumns(_values)
       .map((c) => `${c} = ?`)
       .join(", ")
 
-    return [`UPDATE transport SET ${columns} WHERE id = ${id}`, this.getValues(_values)]
+    return [`UPDATE ${_table} SET ${columns} WHERE id = ${id}`, this.getValues(_values)]
   }
 
   /**
