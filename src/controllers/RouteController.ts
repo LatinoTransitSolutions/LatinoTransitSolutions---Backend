@@ -9,7 +9,6 @@ import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
 import PointModel from "../database/models/PointModel.ts"
 
-
 class RouteController {
     private model: Model
     private connection: Connection
@@ -67,26 +66,30 @@ class RouteController {
         if (route) {
           
           const coordinates = [
-            { start_latitude, start_longitude }, 
-            { end_latitude, end_longitude }]
-      
+             RouteService.getCoordinate(start_latitude, start_longitude),
+             RouteService.getCoordinate(end_latitude, end_longitude)]
+
+             console.log(RouteService.getCoordinate(start_latitude, start_longitude))
+             console.log(RouteService.getCoordinate(end_latitude, end_longitude))
           coordinateModel
             .create(coordinates)
             .then((response: any[]) => {
-              res.send(BaseResponse.success(null, "Coordinate created successfully"));
-              const startCoordinateId = Number(response[0].insertId);
+              console.log("response "+response)
+      
+              const startCoordinateId = Number(response[0].insertId)
               console.log(startCoordinateId)
-              const endCoordinateId = Number(response[1].insertId);
+              const endCoordinateId = Number(response[1].insertId)
+              console.log(startCoordinateId)
       
               const points = [
-                [{ name: route.getStartPoint().getName(), coordinate_id: startCoordinateId }],
-                [{ name: route.getEndPoint().getName(), coordinate_id: endCoordinateId }]
-              ];
+                { name: route.getStartPoint().getName(), coordinate_id: startCoordinateId },
+                { name: route.getEndPoint().getName(), coordinate_id: endCoordinateId }
+              ]
       
               pointModel
                 .create(points)
                 .then((response: any[]) => {
-                  res.send(BaseResponse.success(null, "Point created successfully"));
+                  
                   const startPointId = Number(response[0].insertId);
                   const endPointId = Number(response[1].insertId);
       

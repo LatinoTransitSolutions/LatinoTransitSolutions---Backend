@@ -71,7 +71,7 @@ class PointModel extends BaseModel implements Model{
     }
 
     public update(_values: object): Promise<object | string> {
-        const [query, values] = this.getUpdateQuery(_values)
+        const [query, values] = this.getUpdateQuery(_values, "point")
 
         return new Promise((resolve, reject) => {
             this.connection

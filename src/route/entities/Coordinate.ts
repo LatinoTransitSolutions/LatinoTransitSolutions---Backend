@@ -3,7 +3,7 @@ class Coordinate{
     private latitude: number 
     private longitude: number 
 
-    constructor(_id: number, _latitude: number, _longitude: number){
+    constructor(_latitude: number, _longitude: number, _id: number | undefined = undefined){
         this.id = _id
         this.latitude = _latitude
         this.longitude = _longitude

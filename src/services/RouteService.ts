@@ -1,5 +1,6 @@
 import RouteConcreteBuilder from "../route/builder/RouteConcreteBuilder.ts"
 import RouteDirectorBuilder from "../route/builder/RouteDirectorBuilder.ts"
+import Coordinate from "../route/entities/Coordinate.ts"
 import Route from "../route/entities/Route.ts"
 
 class RouteService {
@@ -23,6 +24,10 @@ class RouteService {
         }
 
         return route
+    }
+
+    public static getCoordinate(_latitude: number, _longitude: number){
+        return new Coordinate(_latitude, _longitude);
     }
 
 }

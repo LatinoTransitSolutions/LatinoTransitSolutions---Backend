@@ -4,6 +4,7 @@ import BaseModel from "./BaseModel.ts";
 import Model from "../models/ModelInterface.ts"
 
 
+
 class CoordinateModel extends BaseModel implements Model{
     connection: Connection
 
@@ -54,23 +55,31 @@ class CoordinateModel extends BaseModel implements Model{
         })
     }
 
-    public create(_values: object): Promise<object | string> {
-        const [query, values] = this.getInsertQuery(_values, "coordinate")
-
-        return new Promise((resolve, reject) => {
-            this.connection
-              .execute(query, values)
-              .then((results: object) => {
-                resolve(results)
+    public create(_values: any[]): Promise<object | string> {
+      const [query, values] = this.getInsertQuery(_values, "coordinate");
+  
+      console.log([query, values]);
+  
+      return new Promise((resolve, reject) => {
+          this.connection
+          .execute(query, values, "batch")
+          .then((results: object) => {
+            console.log("results: " + results)
+                  if (Array.isArray(results)) {
+                    const insertIds = results.map(result => result.insertId);
+                      resolve(insertIds);
+                  } else {
+                      reject("Error: results is not an array");
+                  }
               })
               .catch((error: string) => {
-                reject(error)
-              })
-        })
-    }
+                  reject(error);
+              });
+      });
+  }
 
     public update(_values: object): Promise<object | string> {
-        const [query, values] = this.getUpdateQuery(_values)
+        const [query, values] = this.getUpdateQuery(_values, "coordinate")
 
         return new Promise((resolve, reject) => {
             this.connection
