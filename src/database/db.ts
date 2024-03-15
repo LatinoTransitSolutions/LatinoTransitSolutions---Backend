@@ -8,7 +8,7 @@ const DATABASE: string | undefined = process.env.DB_DATABASE
 
 const pool: Pool = mariadb.createPool({
   connectionLimit: 10,
-  port: PORT,
+  port: Number(PORT),
   host: HOST,
   user: USER,
   password: PASSWORD,
