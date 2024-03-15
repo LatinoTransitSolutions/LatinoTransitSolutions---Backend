@@ -39,7 +39,7 @@ class MariaDBConnection implements Connection {
           const promiseResult = _method === "query" ? connection.query(_query, _values) : connection.batch(_query, _values)
 
           promiseResult
-            .then((results: Array<any>) => {
+            .then((results: any[]) => {
               connection.release()
               resolve(results)
             })

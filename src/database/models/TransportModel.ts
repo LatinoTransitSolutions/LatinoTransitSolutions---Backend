@@ -1,7 +1,4 @@
 import { TransportType } from "../../types/Transport"
-import TransportInterface from "../../transport/product/TransportInterface.ts"
-import TransportPlateInterface from "../../transport/product/TransportPlateInterface.ts"
-
 import Connection from "../connection/ConnectionInterface.ts"
 import BaseModel from "./BaseModel.ts"
 import Model from "./ModelInterface.ts"
@@ -71,7 +68,7 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public update(_values: TransportInterface | TransportPlateInterface): Promise<object | string> {
+  public update(_values: object): Promise<object | string> {
     const [query, values] = this.getUpdateQuery(_values, "transport")
 
     return new Promise((resolve, reject) => {
