@@ -6,7 +6,7 @@ class RouteDirectorBuilder {
 
     constructor(private builder: IRouteBuilder){}
 
-    public createLongRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: number, _startLongitude: number, _endLatidude: number, _endLongitude: number){
+    public createLongRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string){
         this.builder.setId(_id)
         this.builder.setName(_name)
         this.builder.setDescription(_description)
@@ -15,10 +15,10 @@ class RouteDirectorBuilder {
         this.builder.setApproved(false)
         this.builder.setStatus(RouteStatus.AVAILABLE)
         this.builder.setStartPoint(_startLatitude, _startLongitude)
-        this.builder.setEndPoint(_endLatidude, _endLongitude)
+        this.builder.setEndPoint(_endLatitude, _endLongitude)
     }
 
-    public createMediumRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: number, _startLongitude: number, _endLatidude: number, _endLongitude: number){
+    public createMediumRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string){
         this.builder.setId(_id)
         this.builder.setName(_name)
         this.builder.setDescription(_description)
@@ -27,19 +27,19 @@ class RouteDirectorBuilder {
         this.builder.setApproved(false)
         this.builder.setStatus(RouteStatus.AVAILABLE)
         this.builder.setStartPoint(_startLatitude, _startLongitude)
-        this.builder.setEndPoint(_endLatidude, _endLongitude)
+        this.builder.setEndPoint(_endLatitude, _endLongitude)
     }
 
-    public createShortRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: number, _startLongitude: number, _endLatidude: number, _endLongitude: number){
+    public createShortRoute(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string){
         this.builder.setId(_id)
         this.builder.setName(_name)
         this.builder.setDescription(_description)
         this.builder.setType(RouteType.SHORT_ROUTE)
         this.builder.setPrice(_price)
         this.builder.setApproved(false)
-        this.builder.setStatus(RouteStatus.AVAILABLE)
+        this.builder.setStatus(RouteStatus.AVAILABLE)  
         this.builder.setStartPoint(_startLatitude, _startLongitude)
-        this.builder.setEndPoint(_endLatidude, _endLongitude)
+        this.builder.setEndPoint(_endLatitude, _endLongitude)
     }
 }
 

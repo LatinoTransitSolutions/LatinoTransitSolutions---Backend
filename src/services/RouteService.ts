@@ -1,11 +1,12 @@
 import RouteConcreteBuilder from "../route/builder/RouteConcreteBuilder.ts"
 import RouteDirectorBuilder from "../route/builder/RouteDirectorBuilder.ts"
 import Coordinate from "../route/entities/Coordinate.ts"
+import Point from "../route/entities/Point.ts"
 import Route from "../route/entities/Route.ts"
 
 class RouteService {
 
-    public static createRouteEntity(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: number, _startLongitude: number, _endLatitude: number, _endLongitude: number): Route {
+    public static createRouteEntity(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string): Route {
         const routeBuilder: RouteConcreteBuilder = new RouteConcreteBuilder()
         const routeDirector: RouteDirectorBuilder = new RouteDirectorBuilder(routeBuilder)
 
@@ -22,14 +23,20 @@ class RouteService {
             routeDirector.createShortRoute(_id, _name, _description, _price, _startLatitude, _startLongitude, _endLatitude, _endLongitude)
             route = routeBuilder.getRoute()
         }
+        console.log(route.getStartPoint().getName)
 
         return route
+
     }
 
-    public static getCoordinate(_latitude: number, _longitude: number){
+    public static getCoordinate(_latitude: string, _longitude: string){
         return new Coordinate(_latitude, _longitude);
     }
 
+    public static getPointinfo(){
+        
+    }
+    
 }
 
 /**
@@ -52,15 +59,15 @@ function degreesToRadians(_degrees: number): number {
  * @param _lon2 end longitude
  * @returns distance
  */
-function calculateDistance(_lat1: number, _lon1: number, _lat2: number, _lon2: number): number {
+function calculateDistance(_lat1: string, _lon1: string, _lat2: string, _lon2: string): number {
     const earthRadiusKm = 6371
 
-    const dLat = degreesToRadians(_lat2 - _lat1)
-    const dLon = degreesToRadians(_lon2 - _lon1)
+    const dLat = degreesToRadians(parseInt(_lat2) - parseInt(_lat1))
+    const dLon = degreesToRadians(parseInt(_lon2) - parseInt(_lon1))
 
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(degreesToRadians(_lat1)) *
-      Math.cos(degreesToRadians(_lat2)) *
+    Math.cos(degreesToRadians(parseInt(_lat1))) *
+      Math.cos(degreesToRadians(parseInt(_lat2))) *
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
 

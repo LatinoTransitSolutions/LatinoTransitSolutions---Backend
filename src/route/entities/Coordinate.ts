@@ -1,9 +1,9 @@
 class Coordinate{
     private id: number
-    private latitude: number 
-    private longitude: number 
+    private latitude: string 
+    private longitude: string 
 
-    constructor(_latitude: number, _longitude: number, _id: number | undefined = undefined){
+    constructor(_latitude: string, _longitude: string, _id: number | undefined = undefined){
         this.id = _id
         this.latitude = _latitude
         this.longitude = _longitude
@@ -17,19 +17,19 @@ class Coordinate{
         this.id = _id
     }
 
-    public getLatitude(): number{
+    public getLatitude(): string{
         return this.latitude
     }
 
-    public setLatitude(_latitude: number){
+    public setLatitude(_latitude: string){
         this.latitude = _latitude
     }
 
-    public getLongitude(): number{
+    public getLongitude(): string{
         return this.longitude
     }
 
-    public setLongitude(_longitude: number){
+    public setLongitude(_longitude: string){
         this.longitude = _longitude
     }
 }

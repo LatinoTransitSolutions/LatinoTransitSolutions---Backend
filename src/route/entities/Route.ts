@@ -13,7 +13,7 @@ class Route{
     private startPoint: Point
     private endPoint: Point 
 
-    constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _status?: RouteStatus, _startPoint?: Point, _endPoint?: Point){
+    constructor( _id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _status?: RouteStatus, _startPoint?: Point, _endPoint?: Point){
         this.id = _id
         this.name = _name 
         this.description = _description

@@ -5,7 +5,7 @@ class Point{
     private name: string 
     private coordinate: Coordinate
 
-    constructor(_id: number | undefined = undefined, _name: string, _coordinate: Coordinate){
+    constructor(_name: string, _coordinate: Coordinate, _id: number | undefined = undefined){
         this.id = _id
         this.name = _name
         this.coordinate = _coordinate

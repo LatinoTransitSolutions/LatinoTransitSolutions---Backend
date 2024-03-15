@@ -39,11 +39,11 @@ class RouteConcreteBuilder implements IRouteBuilder {
     setStatus(_status: RouteStatus): void {
         this.status = _status
     }
-    setStartPoint(_startLatitude: number, _startLongitude: number): void {
-        this.startPoint = new Point(undefined, "Pickup address", new Coordinate(undefined, _startLatitude, _startLongitude))
+    setStartPoint(_startLatitude: string, _startLongitude: string): void {
+        this.startPoint = new Point("Pickup address", new Coordinate( _startLatitude, _startLongitude, undefined))
     }
-    setEndPoint(_endLatidude: number, _endLongitude: number): void {
-        this.endPoint = new Point(undefined, "Delivery address", new Coordinate(undefined, _endLatidude, _endLongitude))
+    setEndPoint(_endLatidude: string, _endLongitude: string): void {
+        this.endPoint = new Point("Delivery address", new Coordinate(_endLatidude, _endLongitude, undefined))
     }
 
     getRoute(): Route{
