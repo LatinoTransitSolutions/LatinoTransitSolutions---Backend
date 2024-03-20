@@ -2,5 +2,9 @@ enum Rol {
     Client = "client",
     Checker = "checker",
     Approver = "approver",
-    Admin = "admin"
+    Admin = "admin",
+    Carrier = "carrier",
+    User = "User"
 }
+
+export default Rol

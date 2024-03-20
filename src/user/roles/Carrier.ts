@@ -1,14 +1,14 @@
 import Permission from "../interface/Permission";
 import User from "../interface/UserInterface";
 
-class Checker implements User {
+class Carrier implements User{
     id: number;
     name: string;
     email: string;
     password: string;
     company: string;
     permission: Permission[];
-    
+
     constructor() {
         this.permission = [];
     }
@@ -48,6 +48,10 @@ class Checker implements User {
     setPermission(permission: Permission[]): void {
         throw new Error("Method not implemented.");
     }
+
+    carriarCargas() {
+        console.log("Carriando cargas...");
+    }
 }
 
-export default Checker
+export default Carrier

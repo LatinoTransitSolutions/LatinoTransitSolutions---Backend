@@ -1,16 +1,24 @@
+import Rol from "../../enums/Rol";
 import Permission from "../interface/Permission";
 import User from "../interface/UserInterface";
 
-class Checker implements User {
+class UserRegular implements User{
     id: number;
     name: string;
     email: string;
     password: string;
     company: string;
     permission: Permission[];
-    
+
     constructor() {
         this.permission = [];
+    }
+    rol: Rol;
+    getRol(): Rol {
+        throw new Error("Method not implemented.");
+    }
+    setRol(_rol: Rol): void {
+        throw new Error("Method not implemented.");
     }
     getId(): number {
         throw new Error("Method not implemented.");
@@ -50,4 +58,4 @@ class Checker implements User {
     }
 }
 
-export default Checker
+export default UserRegular
