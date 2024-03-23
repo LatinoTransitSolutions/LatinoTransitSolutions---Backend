@@ -82,7 +82,7 @@ class BaseModel {
      * código con los nombres de las columnas de las tablas que fueron
      * escritas en snakeCase
      */
-    const columns = this.camelToSnake(this.cleanUpValues(_values[0] || _values))
+    const columns = this.cleanUpValues(_values[0] || _values)
 
     /**
      * Se filtran los valores con el método cleanUp() para sacar
@@ -113,7 +113,7 @@ class BaseModel {
   public getUpdateQuery(_values: any, _table: string): any[] {
     const id = _values.id
 
-    _values = this.camelToSnake(this.cleanUpValues(_values))
+    _values = this.cleanUpValues(_values)
 
     const columns = this.getColumns(_values)
       .map((c) => `${c} = ?`)

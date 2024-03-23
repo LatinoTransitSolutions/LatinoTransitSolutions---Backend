@@ -19,8 +19,8 @@ class TransportController {
       .getAll()
       .then((results) => {
         results = results.map((val: TransportType) => {
-          const { id, type, name, max_width, max_height, max_length, max_weight, plate }: TransportType = val
-          return TransportService.createTransportEntity(id, type, name, max_width, max_height, max_length, max_weight, plate)
+          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: TransportType = val
+          return TransportService.createTransportEntity(id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
         })
 
         res.send(BaseResponse.success(results))
@@ -53,9 +53,9 @@ class TransportController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { type, name, max_width, max_height, max_length, max_weight, plate }: NewTransportType = req.body
+    const { type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: NewTransportType = req.body
 
-    const transport = TransportService.createTransportEntity(undefined, type, name, max_width, max_height, max_length, max_weight, plate)
+    const transport = TransportService.createTransportEntity(undefined, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
 
     if (transport) {
       this.model
@@ -73,10 +73,10 @@ class TransportController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, type, name, max_width, max_height, max_length, max_weight, plate }: TransportType = req.body
+    const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: TransportType = req.body
 
     this.model
-      .update({ id, type, name, max_width, max_height, max_length, max_weight, plate })
+      .update({ id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate })
       .then((response) => {
         res.send(BaseResponse.success(null, "Transport updated successfully"))
       })

@@ -1,9 +1,9 @@
 import Truck from "../product/Truck"
-import TransportPlate from "../product/TransportPlateInterface"
+import ITransportPlate from "../product/ITransportPlate"
 import TransportPlateFactory from "./TransportPlateFactory"
 
 class TruckFactory extends TransportPlateFactory {
-  createTransport(): TransportPlate {
+  getTransport(): ITransportPlate {
     return new Truck()
   }
 }

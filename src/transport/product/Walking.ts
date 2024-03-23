@@ -1,6 +1,6 @@
-import Transport from "./TransportInterface"
+import ITransport from "./ITransport"
 
-class Walking implements Transport {
+class Walking implements ITransport {
   id: number
   type: string
   name: string
