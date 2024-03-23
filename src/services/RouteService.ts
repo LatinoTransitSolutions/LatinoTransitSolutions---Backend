@@ -1,7 +1,6 @@
 import RouteConcreteBuilder from "../route/builder/RouteConcreteBuilder.ts"
 import RouteDirectorBuilder from "../route/builder/RouteDirectorBuilder.ts"
 import Coordinate from "../route/entities/Coordinate.ts"
-import Point from "../route/entities/Point.ts"
 import Route from "../route/entities/Route.ts"
 
 class RouteService {
@@ -26,17 +25,11 @@ class RouteService {
         console.log(route.getStartPoint().getName)
 
         return route
-
     }
 
     public static getCoordinate(_latitude: string, _longitude: string){
         return new Coordinate(_latitude, _longitude);
     }
-
-    public static getPointinfo(){
-        
-    }
-    
 }
 
 /**
@@ -66,7 +59,7 @@ function calculateDistance(_lat1: string, _lon1: string, _lat2: string, _lon2: s
     const dLon = degreesToRadians(parseInt(_lon2) - parseInt(_lon1))
 
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(degreesToRadians(parseInt(_lat1))) *
+      Math.cos(degreesToRadians(parseInt(_lat1))) *
       Math.cos(degreesToRadians(parseInt(_lat2))) *
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
