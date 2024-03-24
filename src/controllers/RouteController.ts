@@ -23,8 +23,8 @@ class RouteController {
             .getAll()
             .then((results) => {
               results = results.map((val: RouteType) => {
-                  const {name, description, price, start_latitude, start_longitude, end_latitude, end_longitude}: RouteType = val
-                  return RouteService.createRouteEntity(undefined, name, description, price, start_latitude, start_longitude, end_latitude, end_longitude);
+                  const {name, description, price, startLatitude, startLongitude, endLatitude, endLongitude}: RouteType = val
+                  return RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude);
               })
 
               res.send(BaseResponse.success(results))
@@ -58,9 +58,9 @@ class RouteController {
     
       public create = async (req: Request, res: Response) => {
           try{
-              const { name, description, price, start_latitude, start_longitude, end_latitude, end_longitude }: NewRouteType = req.body;
+              const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: NewRouteType = req.body;
 
-              const route = RouteService.createRouteEntity(undefined, name, description, price, start_latitude, start_longitude, end_latitude, end_longitude);
+              const route = RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude);
               if (!route) {
                   return res.send(BaseResponse.error("Unexpected route type"));
               }
@@ -68,8 +68,8 @@ class RouteController {
               const coordinateModel = new CoordinateModel(this.connection);
               const pointModel = new PointModel(this.connection);
 
-              const startCoordinate = RouteService.getCoordinate(start_latitude, start_longitude)
-              const endCoordinate = RouteService.getCoordinate(end_latitude, end_longitude)
+              const startCoordinate = RouteService.getCoordinate(startLatitude, startLongitude)
+              const endCoordinate = RouteService.getCoordinate(endLatitude, endLongitude)
 
               const [startResponse, endResponse]: any[] = await Promise.all([
                   coordinateModel.create(startCoordinate),
@@ -79,8 +79,8 @@ class RouteController {
               const startCoordinateId = Number(startResponse.insertId);
               const endCoordinateId = Number(endResponse.insertId);
 
-              const startPoint = {name: route.getStartPoint().getName(), coordinate_id: startCoordinateId}
-              const endPoint = {name: route.getEndPoint().getName(), coordinate_id: endCoordinateId}
+              const startPoint = {name: route.getStartPoint().getName(), coordinateID: startCoordinateId}
+              const endPoint = {name: route.getEndPoint().getName(), coordinateID: endCoordinateId}
 
               const [startPointResponse, endPointResponse]: any[] = await Promise.all([
                 pointModel.create(startPoint),
@@ -97,8 +97,8 @@ class RouteController {
                   price: route.getPrice(),
                   approved: route.getApproved(),
                   status: route.getStatus(),
-                  start_point_id: startPointId,
-                  end_point_id: endPointId
+                  startPointID: startPointId,
+                  endPointID: endPointId
               });
               res.send(BaseResponse.success(null, "Route created successfully")); 
               
@@ -109,10 +109,10 @@ class RouteController {
       }
         
       public update = (req: Request, res: Response) => {
-          const { id, name, description, price, start_latitude, start_longitude, end_latitude, end_longitude }: RouteType = req.body
+          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: RouteType = req.body
       
           this.model
-            .update({ id, name, description, price, start_latitude, start_longitude, end_latitude, end_longitude })
+            .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude })
             .then((response) => {
               res.send(BaseResponse.success(null, "Route updated successfully"))
             })

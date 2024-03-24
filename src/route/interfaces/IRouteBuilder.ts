@@ -11,7 +11,7 @@ interface IRouteBuilder{
     setApproved(_approved: boolean): void
     setStatus(_status: RouteStatus): void 
     setStartPoint(_startLatitude: string, _startLongitude: string): void
-    setEndPoint(_endLatidude: string, _endLongitude: string): void
+    setEndPoint(_endLatitude: string, _endLongitude: string): void
     getRoute(): Route
 }
 

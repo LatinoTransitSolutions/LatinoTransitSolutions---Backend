@@ -6,10 +6,10 @@ export type RouteType = {
     price: number 
     approved: boolean 
     status: string
-    start_latitude: string
-    start_longitude: string 
-    end_latitude: string
-    end_longitude: string
+    startLatitude: string
+    startLongitude: string 
+    endLatitude: string
+    endLongitude: string
 }
 
 export type NewRouteType = Omit<RouteType, "id">
