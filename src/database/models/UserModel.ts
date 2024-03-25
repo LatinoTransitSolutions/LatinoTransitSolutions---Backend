@@ -1,7 +1,4 @@
-import { UserType } from "../../types/User"
-import UserInterface from "../../user/interface/UserInterface.ts"
-import Permission from "../../user/interface/Permission.ts"
-
+import IUser from "../../user/interface/IUser.ts"
 import Connection from "../connection/ConnectionInterface.ts"
 import BaseModel from "./BaseModel"
 import ModelInterface from "./ModelInterface"
@@ -15,11 +12,11 @@ class UserModel extends BaseModel implements ModelInterface {
         this.connection = _connection
     }
     
-    public getAll(): Promise<UserType[] | string> {
+    public getAll(): Promise<IUser[] | string> {
         return new Promise((resolve, reject) => {
             this.connection
                 .execute(`SELECT * FROM user`)
-                .then((resulte: UserType[]) => {
+                .then((resulte: IUser[]) => {
                     resolve(resulte)
                 })
                 .catch((error: string) => {
@@ -72,7 +69,7 @@ class UserModel extends BaseModel implements ModelInterface {
         })
     }
     
-    public update(_values: UserInterface | Permission): Promise<object | string> {
+    public update(_values: IUser): Promise<object | string> {
         const [query, values] = this.getUpdateQuery(_values)
     
         return new Promise((resolve, reject) => {

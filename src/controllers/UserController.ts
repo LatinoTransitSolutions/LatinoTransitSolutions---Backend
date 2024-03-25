@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
-import { NewUserType, UserType } from "../types/User"
 import BaseResponse from "../common/BaseResponse.ts"
 
 import Connection from "../database/connection/ConnectionInterface"
 import Model from "../database/models/ModelInterface"
 import UserModel from "../database/models/UserModel"
+import UserService from "../services/UserService.ts"
+import IUser from "../user/interface/IUser.ts"
 
 class UserController {
   private model: Model
@@ -17,9 +18,9 @@ class UserController {
   this.model
     .getAll()
     .then((results) => {
-      results = results.map((val: UserType) => {
-        const { id, type, name, max_width, max_height, max_length, max_weight, plate }: UserType = val
-        return TransportService.createTransportEntity(id, type, name, max_width, max_height, max_length, max_weight, plate)
+      results = results.map((val: IUser) => {
+        const { id, name, role, email, password, company }: IUser = val
+        return UserService.creatreUser(id, name, role, email, password, company)
       })
 
         res.send(BaseResponse.success(results))
@@ -52,32 +53,32 @@ class UserController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { type, name, max_width, max_height, max_length, max_weight, plate }: NewUserType = req.body
+    const { name, role, email, password, company }: IUser = req.body
 
-    const transport = TransportService.createTransportEntity(undefined, type, name, max_width, max_height, max_length, max_weight, plate)
+    const user = UserService.creatreUser(undefined, name, role, email, password, company)
 
-    if (transport) {
+    if ( user ) {
       this.model
-        .create(transport)
+        .create(user)
         .then((response) => {
-          res.send(BaseResponse.success(null, "Transport created successfully"))
+          res.send(BaseResponse.success(null, "user created successfully"))
         })
         .catch((error) => {
           console.log(error)
           res.send(BaseResponse.error(error))
         })
     } else {
-      res.send(BaseResponse.error("Unexpected transport type"))
+      res.send(BaseResponse.error("Unexpected user type"))
     }
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, type, name, max_width, max_height, max_length, max_weight, plate }: UserType = req.body
+    const { id, name, role, email, password, company }: IUser = req.body
 
     this.model
-      .update({ id, type, name, max_width, max_height, max_length, max_weight, plate })
+      .update({ id, name, role, email, password, company })
       .then((response) => {
-        res.send(BaseResponse.success(null, "Transport updated successfully"))
+        res.send(BaseResponse.success(null, "user updated successfully"))
       })
       .catch((error) => {
         console.log(BaseResponse.error(error))
@@ -85,12 +86,12 @@ class UserController {
   }
 
   public delete = (req: Request, res: Response) => {
-    const { id }: UserType = req.body
+    const { id }: IUser = req.body
 
     this.model
       .delete(id)
       .then((response) => {
-        res.send(BaseResponse.success(null, "Transport deleted successfully"))
+        res.send(BaseResponse.success(null, "user deleted successfully"))
       })
       .catch((error) => {
         console.log(BaseResponse.error(error))
