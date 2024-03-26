@@ -1,15 +1,15 @@
-import { TransportType } from "../../types/Transport"
-import ITransport from "../../transport/product/ITransport.ts"
 import ITransportPlate from "../../transport/product/ITransportPlate.ts"
+import ITransport from "../../transport/product/ITransport.ts"
+import { TransportType } from "../../types/Transport"
 
-import Connection from "../connection/ConnectionInterface.ts"
+import IConnection from "../connection/IConnection.ts"
 import BaseModel from "./BaseModel.ts"
-import Model from "./ModelInterface.ts"
+import IModel from "./IModel.ts"
 
-class TransportModel extends BaseModel implements Model {
-  private connection: Connection
+class TransportModel extends BaseModel implements IModel {
+  private connection: IConnection
 
-  constructor(_connection: Connection) {
+  constructor(_connection: IConnection) {
     super()
     this.connection = _connection
   }
@@ -27,12 +27,12 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public getById(_id: number): Promise<any[] | string> {
+  public getById(_id: number): Promise<TransportType | string> {
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM transport WHERE id = ?`, [_id])
-        .then((results: any[]) => {
-          resolve(results)
+        .then(([result]: TransportType[]) => {
+          resolve(result)
         })
         .catch((error: string) => {
           reject(error)
@@ -40,14 +40,14 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public getOne(_target: object): Promise<any[] | string> {
+  public getByColumn(_target: object): Promise<TransportType[] | string> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM transport WHERE ${column} = ? LIMIT 1`, [value])
-        .then((results: any[]) => {
+        .then((results: TransportType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -56,7 +56,7 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public create(_values: object): Promise<object | string> {
+  public create(_values: ITransport | ITransportPlate): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "transport")
 
     return new Promise((resolve, reject) => {
@@ -71,14 +71,24 @@ class TransportModel extends BaseModel implements Model {
     })
   }
 
-  public update(_values: ITransport | ITransportPlate): Promise<object | string> {
-    const [query, values] = this.getUpdateQuery(_values, "transport")
-
+  public async update(_values: TransportType): Promise<object | string> {
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute(query, values)
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_values.id)
+        .then((exists) => {
+          if (exists) {
+            const [query, values] = this.getUpdateQuery(_values, "transport")
+
+            this.connection
+              .execute(query, values)
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("Transport does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)
