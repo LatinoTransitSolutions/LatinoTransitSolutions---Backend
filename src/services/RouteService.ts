@@ -21,7 +21,6 @@ class RouteService {
       routeDirector.createShortRoute(_id, _name, _description, _price, _startLatitude, _startLongitude, _endLatitude, _endLongitude)
       route = routeBuilder.getRoute()
     }
-    console.log(route.getStartPoint().getName)
 
     return route
   }

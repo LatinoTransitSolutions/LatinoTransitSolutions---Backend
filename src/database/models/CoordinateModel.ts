@@ -56,8 +56,6 @@ class CoordinateModel extends BaseModel implements IModel {
   public create(_values: object): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "coordinate")
 
-    console.log([query, values])
-
     return new Promise((resolve, reject) => {
       this.connection
         .execute(query, values)
