@@ -1,7 +1,7 @@
 import { SqlError, PoolConnection } from "mariadb"
 import db from "../db.ts"
 import BaseException from "../../common/BaseException.ts"
-import Connection from "./ConnectionInterface.ts"
+import IConnection from "./IConnection.ts"
 
 /**
  * Clase que permite hacer la conexión con MariaDB
@@ -11,7 +11,7 @@ import Connection from "./ConnectionInterface.ts"
  * y a su vez es un singleton ya que solo maneja
  * una instancia de la clase
  */
-class MariaDBConnection implements Connection {
+class MariaDBConnection implements IConnection {
   private static instance: MariaDBConnection
 
   public static getInstance(): MariaDBConnection {
