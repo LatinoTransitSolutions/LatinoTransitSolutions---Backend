@@ -14,7 +14,28 @@ class RouteModel extends BaseModel implements IModel {
   public getAll(): Promise<RouteType[] | string> {
     return new Promise((resolve, reject) => {
       this.connection
-        .execute("SELECT * FROM route")
+        .execute(
+          `
+          SELECT 
+          route.name,
+          route.description,
+          route.type,
+          route.price,
+          route.approved,
+          route.status,
+          spoint.name as startPointName,
+          epoint.name as endPointName,
+          scoord.latitude as startLatitude,
+          scoord.longitude as startLongitude,
+          ecoord.latitude as endLatitude,
+          ecoord.longitude as endLongitude
+          FROM route
+          INNER JOIN point as spoint ON spoint.id = route.startPointID
+          INNER JOIN point as epoint ON epoint.id = route.endPointID
+          INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
+          INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
+        `
+        )
         .then((results: RouteType[]) => {
           resolve(results)
         })
