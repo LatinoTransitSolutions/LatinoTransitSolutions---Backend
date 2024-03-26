@@ -43,7 +43,7 @@ class RouteModel extends BaseModel implements IModel {
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM route WHERE ${column} = ? LIMIT = 1`, [value])
+        .execute(`SELECT * FROM route WHERE ${column} = ?`, [value])
         .then((results: any[]) => {
           resolve(results)
         })

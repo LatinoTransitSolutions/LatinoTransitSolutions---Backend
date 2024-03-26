@@ -7,7 +7,8 @@ import IUser from "../user/interface/IUser"
 
 class UserService {
   static createUser(_id: number | undefined = undefined, _name: string, _role: string, _email: string, _password: string, _company: string): IUser | null {
-    let factory
+    let factory = null
+
     switch (_role) {
       case "client":
         factory = new ClientFactory()
@@ -25,8 +26,9 @@ class UserService {
         factory = new AdminFactory()
         break
       default:
-        throw new Error("Rol de usuario no valido")
+        throw new Error("Rol de usuario no válido")
     }
+
     return factory.creater(_id, _name, _role, _email, _password, _company)
   }
 }

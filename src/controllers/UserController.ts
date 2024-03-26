@@ -1,27 +1,27 @@
 import { Request, Response } from "express"
 import BaseResponse from "../common/BaseResponse.ts"
 
-import Connection from "../database/connection/ConnectionInterface"
-import Model from "../database/models/ModelInterface"
+import IConnection from "../database/connection/IConnection"
+import IModel from "../database/models/IModel"
 import UserModel from "../database/models/UserModel"
 import UserService from "../services/UserService.ts"
-import { NewUserType } from "../types/User"
+import { UserType, NewUserType } from "../types/User"
 
 class UserController {
-  private model: Model
+  private model: IModel
 
-  constructor(_connection: Connection) {
+  constructor(_connection: IConnection) {
     this.model = new UserModel(_connection)
   }
 
   public getAll = (req: Request, res: Response) => {
-  this.model
-    .getAll()
-    .then((results) => {
-      results = results.map((val: NewUserType) => {
-        const { id, name, role, email, password, company }: NewUserType = val
-        return UserService.createUser(id, name, role, email, password, company)
-      })
+    this.model
+      .getAll()
+      .then((results) => {
+        results = results.map((val: UserType) => {
+          const { id, name, role, email, password, company }: UserType = val
+          return UserService.createUser(id, name, role, email, password, company)
+        })
 
         res.send(BaseResponse.success(results))
       })
@@ -41,9 +41,9 @@ class UserController {
       })
   }
 
-  public getOne = (req: Request, res: Response) => {
+  public getByColumn = (req: Request, res: Response) => {
     this.model
-      .getOne(req.body)
+      .getByColumn(req.body)
       .then((response) => {
         res.send(BaseResponse.success(response))
       })
@@ -57,11 +57,11 @@ class UserController {
 
     const user = UserService.createUser(undefined, name, role, email, password, company)
 
-    if ( user ) {
+    if (user) {
       this.model
         .create(user)
         .then((response) => {
-          res.send(BaseResponse.success(null, "user created successfully"))
+          res.send(BaseResponse.success(null, "User created successfully"))
         })
         .catch((error) => {
           console.log(error)
@@ -73,12 +73,12 @@ class UserController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, name, role, email, password, company }: NewUserType = req.body
+    const { id, name, role, email, password, company }: UserType = req.body
 
     this.model
       .update({ id, name, role, email, password, company })
       .then((response) => {
-        res.send(BaseResponse.success(null, "user updated successfully"))
+        res.send(BaseResponse.success(null, "User updated successfully"))
       })
       .catch((error) => {
         console.log(BaseResponse.error(error))
@@ -86,12 +86,12 @@ class UserController {
   }
 
   public delete = (req: Request, res: Response) => {
-    const { id }: NewUserType = req.body
+    const { id }: UserType = req.body
 
     this.model
       .delete(id)
       .then((response) => {
-        res.send(BaseResponse.success(null, "user deleted successfully"))
+        res.send(BaseResponse.success(null, "User deleted successfully"))
       })
       .catch((error) => {
         console.log(BaseResponse.error(error))

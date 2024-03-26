@@ -46,7 +46,7 @@ class TransportModel extends BaseModel implements IModel {
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM transport WHERE ${column} = ? LIMIT 1`, [value])
+        .execute(`SELECT * FROM transport WHERE ${column} = ?`, [value])
         .then((results: TransportType[]) => {
           resolve(results)
         })

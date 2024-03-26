@@ -1,12 +1,12 @@
 import IUser from "../../user/interface/IUser.ts"
-import Connection from "../connection/ConnectionInterface.ts"
-import BaseModel from "./BaseModel"
-import ModelInterface from "./ModelInterface"
+import IConnection from "../connection/IConnection.ts"
+import BaseModel from "./BaseModel.ts"
+import IModel from "./IModel.ts"
 
-class UserModel extends BaseModel implements ModelInterface {
-  private connection: Connection
+class UserModel extends BaseModel implements IModel {
+  private connection: IConnection
 
-  constructor(_connection: Connection) {
+  constructor(_connection: IConnection) {
     super()
     this.connection = _connection
   }
@@ -39,13 +39,13 @@ class UserModel extends BaseModel implements ModelInterface {
     })
   }
 
-  public getOne(_target: object): Promise<any[] | string> {
+  public getByColumn(_target: object): Promise<any[] | string> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM user WHERE ${column} = ? LIMIT 1`, [value])
+        .execute(`SELECT * FROM user WHERE ${column} = ?`, [value])
         .then((results: any[]) => {
           resolve(results)
         })
@@ -56,7 +56,7 @@ class UserModel extends BaseModel implements ModelInterface {
   }
 
   public create(_values: object): Promise<object | string> {
-    const [query, values] = this.getInsertQuery(_values)
+    const [query, values] = this.getInsertQuery(_values, "user")
 
     return new Promise((resolve, reject) => {
       this.connection
@@ -71,7 +71,7 @@ class UserModel extends BaseModel implements ModelInterface {
   }
 
   public update(_values: IUser): Promise<object | string> {
-    const [query, values] = this.getUpdateQuery(_values)
+    const [query, values] = this.getUpdateQuery(_values, "user")
 
     return new Promise((resolve, reject) => {
       this.connection
@@ -84,6 +84,7 @@ class UserModel extends BaseModel implements ModelInterface {
         })
     })
   }
+
   public delete(_id: number): Promise<object | string> {
     return new Promise((resolve, reject) => {
       this.connection
