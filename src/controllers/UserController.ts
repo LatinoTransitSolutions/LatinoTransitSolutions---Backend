@@ -5,7 +5,7 @@ import Connection from "../database/connection/ConnectionInterface"
 import Model from "../database/models/ModelInterface"
 import UserModel from "../database/models/UserModel"
 import UserService from "../services/UserService.ts"
-import IUser from "../user/interface/IUser.ts"
+import { NewUserType } from "../types/User"
 
 class UserController {
   private model: Model
@@ -18,9 +18,9 @@ class UserController {
   this.model
     .getAll()
     .then((results) => {
-      results = results.map((val: IUser) => {
-        const { id, name, role, email, password, company }: IUser = val
-        return UserService.creatreUser(id, name, role, email, password, company)
+      results = results.map((val: NewUserType) => {
+        const { id, name, role, email, password, company }: NewUserType = val
+        return UserService.createUser(id, name, role, email, password, company)
       })
 
         res.send(BaseResponse.success(results))
@@ -53,9 +53,9 @@ class UserController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { name, role, email, password, company }: IUser = req.body
+    const { name, role, email, password, company }: NewUserType = req.body
 
-    const user = UserService.creatreUser(undefined, name, role, email, password, company)
+    const user = UserService.createUser(undefined, name, role, email, password, company)
 
     if ( user ) {
       this.model
@@ -73,7 +73,7 @@ class UserController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, name, role, email, password, company }: IUser = req.body
+    const { id, name, role, email, password, company }: NewUserType = req.body
 
     this.model
       .update({ id, name, role, email, password, company })
@@ -86,7 +86,7 @@ class UserController {
   }
 
   public delete = (req: Request, res: Response) => {
-    const { id }: IUser = req.body
+    const { id }: NewUserType = req.body
 
     this.model
       .delete(id)

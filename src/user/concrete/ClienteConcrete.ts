@@ -8,7 +8,7 @@ class ClientConcrete implements IUser {
   password: string
   company: string
 
-  constructor(_id: number, _name: string, _role: string, _email: string, _password: string, _company: string) {
+  constructor(_id: number | undefined = undefined, _name: string, _role: string, _email: string, _password: string, _company: string) {
     this.id = _id
     this.name = _name
     this.role = _role

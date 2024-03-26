@@ -6,22 +6,28 @@ import ClientFactory from "../user/factories/ClientFactory"
 import IUser from "../user/interface/IUser"
 
 class UserService {
-  static creatreUser(_id: number, _name: string, _role: string, _email: string, _password: string, _company: string): IUser {
-    
+  static createUser(_id: number | undefined = undefined, _name: string, _role: string, _email: string, _password: string, _company: string): IUser | null {
+    let factory
     switch (_role) {
-      case 'Client':
-        return new ClientFactory().creatreUser(_id, _name, _role,  _email, _password, _company)
-      case 'Checker':
-        return new CheckerFactory().creatreUser(_id, _name, _role,  _email, _password, _company)
-      case 'Carrier':
-        return new CarrierFactory().creatreUser(_id, _name, _role,  _email, _password, _company)
-      case 'Approver':
-        return new ApproverFactory().creatreUser(_id, _name, _role,  _email, _password, _company)
-      case 'Admin:':
-        return new AdminFactory().creatreUser(_id, _name, _role,  _email, _password, _company)
+      case "client":
+        factory = new ClientFactory()
+        break
+      case "checker":
+        factory = new CheckerFactory()
+        break
+      case "carrier":
+        factory = new CarrierFactory()
+        break
+      case "approver":
+        factory = new ApproverFactory()
+        break
+      case "admin":
+        factory = new AdminFactory()
+        break
       default:
         throw new Error("Rol de usuario no valido")
     }
+    return factory.creater(_id, _name, _role, _email, _password, _company)
   }
 }
 

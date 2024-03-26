@@ -14,6 +14,7 @@ import { Router } from "express"
 import cityRouter from "./city.router.ts"
 import authRouter from "./auth.router.ts"
 import transportRouter from "./transport.router.ts"
+import userRouter from "./user.router.ts"
 
 /**
  * Se crea un objeto tipo Router
@@ -31,5 +32,6 @@ router.use(cors({ origin: "http://localhost:3000" }))
 router.use("/city", cityRouter)
 router.use("/auth", authRouter)
 router.use("/transport", transportRouter)
+router.use("/user", userRouter)
 
 export default router

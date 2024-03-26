@@ -1,6 +1,6 @@
 import IUser from "../interface/IUser"
 
-class ApproverConcrete implements IUser {
+class UserConcrete implements IUser {
   id: number
   name: string
   role: string
@@ -16,10 +16,6 @@ class ApproverConcrete implements IUser {
     this.password = _password
     this.company = _company
   }
-
-  approveRoute() {
-    // Implementación aquí
-  }
 }
 
-export default ApproverConcrete
+export default UserConcrete
