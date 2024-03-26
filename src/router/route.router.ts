@@ -1,11 +1,11 @@
 import { Router } from "express"
 import authMiddleware from "../middleware/auth.ts"
 import MariaDBConnection from "../database/connection/MariaDBConnection.ts"
-import TransportController from "../controllers/TransportController.ts"
+import RouteController from "../controllers/RouteController.ts"
 
 const router: Router = Router()
 
-const controller = new TransportController(MariaDBConnection.getInstance())
+const controller = new RouteController(MariaDBConnection.getInstance())
 
 router.get("/all", authMiddleware, controller.getAll)
 router.get("/get-by-id", authMiddleware, controller.getById)
