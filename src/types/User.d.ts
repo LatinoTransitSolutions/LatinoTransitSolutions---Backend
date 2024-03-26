@@ -1,1 +1,10 @@
-export type User = { id: string; username: string; password: string }
+export type UserType = {
+  id: number
+  name: string
+  role: string
+  email: string
+  password: string
+  company: string
+}
+
+export type NewUserType = Omit<UserType, "id">

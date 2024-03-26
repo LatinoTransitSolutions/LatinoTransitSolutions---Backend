@@ -1,9 +1,9 @@
 import Motorcycle from "../product/Motorcycle"
-import TransportPlate from "../product/TransportPlateInterface"
+import ITransportPlate from "../product/ITransportPlate"
 import TransportPlateFactory from "./TransportPlateFactory"
 
 class MotorcycleFactory extends TransportPlateFactory {
-  createTransport(): TransportPlate {
+  getTransport(): ITransportPlate {
     return new Motorcycle()
   }
 }

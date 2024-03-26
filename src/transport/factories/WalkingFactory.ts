@@ -1,9 +1,9 @@
-import Transport from "../product/TransportInterface"
+import ITransport from "../product/ITransport"
 import TransportFactory from "./TransportFactory"
 import Walking from "../product/Walking"
 
 class WalkingFactory extends TransportFactory {
-  createTransport(): Transport {
+  getTransport(): ITransport {
     return new Walking()
   }
 }

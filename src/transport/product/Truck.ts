@@ -1,6 +1,6 @@
-import TransportPlate from "./TransportPlateInterface"
+import ITransportPlate from "./ITransportPlate"
 
-class Truck implements TransportPlate {
+class Truck implements ITransportPlate {
   id: number
   type: string
   name: string

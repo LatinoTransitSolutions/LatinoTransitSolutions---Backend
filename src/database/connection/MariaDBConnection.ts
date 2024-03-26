@@ -1,12 +1,17 @@
 import { SqlError, PoolConnection } from "mariadb"
 import db from "../db.ts"
 import BaseException from "../../common/BaseException.ts"
-import Connection from "./ConnectionInterface.ts"
+import IConnection from "./IConnection.ts"
 
 /**
  * Clase que permite hacer la conexión con MariaDB
+ *
+ * Es una fachada ya que se implementa un método
+ * "execute" que conecta con la librería de mariadb
+ * y a su vez es un singleton ya que solo maneja
+ * una instancia de la clase
  */
-class MariaDBConnection implements Connection {
+class MariaDBConnection implements IConnection {
   private static instance: MariaDBConnection
 
   public static getInstance(): MariaDBConnection {
@@ -32,14 +37,13 @@ class MariaDBConnection implements Connection {
    * console log del error para tener toda la info del
    * error
    */
-  public execute(_query: string, _values: any[] = [], _method: string = "query"): Promise<Array<unknown>> {
+  public execute(_query: string, _values: any[] = []): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
       db.getConnection()
         .then((connection: PoolConnection) => {
-          const promiseResult = _method === "query" ? connection.query(_query, _values) : connection.batch(_query, _values)
-
-          promiseResult
-            .then((results: Array<any>) => {
+          connection
+            .query(_query, _values)
+            .then((results: any[]) => {
               connection.release()
               resolve(results)
             })

@@ -2,10 +2,10 @@ export type TransportType = {
   id: number
   type: string
   name: string
-  max_width: number
-  max_height: number
-  max_length: number
-  max_weight: number
+  maxWidth: number
+  maxHeight: number
+  maxLength: number
+  maxWeight: number
   plate: string
 }
 
