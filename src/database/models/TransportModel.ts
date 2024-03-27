@@ -98,10 +98,20 @@ class TransportModel extends BaseModel implements IModel {
 
   public delete(_id: number): Promise<object | string> {
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute("DELETE FROM transport WHERE id = ?", [_id])
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_id)
+        .then((exists) => {
+          if (exists) {
+            this.connection
+              .execute(`DELETE FROM transport WHERE id = ?`, [_id])
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("Transport does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)

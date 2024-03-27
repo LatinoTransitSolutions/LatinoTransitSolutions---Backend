@@ -3,14 +3,14 @@ import { NewTransportType, TransportType } from "../types/Transport"
 import BaseResponse from "../common/BaseResponse.ts"
 
 import Connection from "../database/connection/IConnection.ts"
-import Model from "../database/models/IModel.ts"
+import IModel from "../database/models/IModel.ts"
 import TransportModel from "../database/models/TransportModel.ts"
-import TransportService from "../services/TransportService.ts"
 import ITransportPlate from "../transport/product/ITransportPlate.ts"
 import ITransport from "../transport/product/ITransport.ts"
+import TransportService from "../services/TransportService.ts"
 
 class TransportController {
-  private model: Model
+  private model: IModel
 
   constructor(_connection: Connection) {
     this.model = new TransportModel(_connection)
@@ -21,7 +21,7 @@ class TransportController {
       .getAll()
       .then((results: TransportType[]) => {
         const newResults: (ITransport | ITransportPlate)[] = results.map((val: TransportType) => {
-          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: TransportType = val
+          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate } = val
           return TransportService.createTransportEntity(id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
         })
 
@@ -35,7 +35,7 @@ class TransportController {
   public getById = (req: Request, res: Response) => {
     this.model
       .getById(req.body.id)
-      .then((response) => {
+      .then((response: ITransport | ITransportPlate) => {
         res.send(BaseResponse.success(response))
       })
       .catch((error: string) => {
@@ -46,8 +46,13 @@ class TransportController {
   public getByColumn = (req: Request, res: Response) => {
     this.model
       .getByColumn(req.body)
-      .then((response) => {
-        res.send(BaseResponse.success(response))
+      .then((results: TransportType[]) => {
+        const newResults: (ITransport | ITransportPlate)[] = results.map((val: TransportType) => {
+          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate } = val
+          return TransportService.createTransportEntity(id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
+        })
+
+        res.send(BaseResponse.success(newResults))
       })
       .catch((error: string) => {
         res.send(BaseResponse.error(error))

@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
+import { UserType, NewUserType } from "../types/User"
 import BaseResponse from "../common/BaseResponse.ts"
 
 import IConnection from "../database/connection/IConnection"
 import IModel from "../database/models/IModel"
 import UserModel from "../database/models/UserModel"
 import UserService from "../services/UserService.ts"
-import { UserType, NewUserType } from "../types/User"
+import IUser from "../user/interface/IUser.ts"
 
 class UserController {
   private model: IModel
@@ -18,14 +19,14 @@ class UserController {
     this.model
       .getAll()
       .then((results) => {
-        results = results.map((val: UserType) => {
-          const { id, name, role, email, password, company }: UserType = val
+        const newResults: IUser = results.map((val: UserType) => {
+          const { id, name, role, email, password, company } = val
           return UserService.createUser(id, name, role, email, password, company)
         })
 
-        res.send(BaseResponse.success(results))
+        res.send(BaseResponse.success(newResults))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         res.send(BaseResponse.error(error))
       })
   }
@@ -33,10 +34,10 @@ class UserController {
   public getById = (req: Request, res: Response) => {
     this.model
       .getById(req.body.id)
-      .then((response) => {
+      .then((response: IUser) => {
         res.send(BaseResponse.success(response))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -44,10 +45,15 @@ class UserController {
   public getByColumn = (req: Request, res: Response) => {
     this.model
       .getByColumn(req.body)
-      .then((response) => {
-        res.send(BaseResponse.success(response))
+      .then((results) => {
+        const newResults: IUser = results.map((val: UserType) => {
+          const { id, name, role, email, password, company } = val
+          return UserService.createUser(id, name, role, email, password, company)
+        })
+
+        res.send(BaseResponse.success(newResults))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -60,10 +66,10 @@ class UserController {
     if (user) {
       this.model
         .create(user)
-        .then((response) => {
+        .then(() => {
           res.send(BaseResponse.success(null, "User created successfully"))
         })
-        .catch((error) => {
+        .catch((error: string) => {
           console.log(error)
           res.send(BaseResponse.error(error))
         })
@@ -77,10 +83,10 @@ class UserController {
 
     this.model
       .update({ id, name, role, email, password, company })
-      .then((response) => {
+      .then(() => {
         res.send(BaseResponse.success(null, "User updated successfully"))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -90,10 +96,10 @@ class UserController {
 
     this.model
       .delete(id)
-      .then((response) => {
+      .then(() => {
         res.send(BaseResponse.success(null, "User deleted successfully"))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }

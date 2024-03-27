@@ -1,3 +1,4 @@
+import { UserType } from "../../types/User"
 import IUser from "../../user/interface/IUser.ts"
 import IConnection from "../connection/IConnection.ts"
 import BaseModel from "./BaseModel.ts"
@@ -11,11 +12,11 @@ class UserModel extends BaseModel implements IModel {
     this.connection = _connection
   }
 
-  public getAll(): Promise<IUser[] | string> {
+  public getAll(): Promise<UserType[] | string> {
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM user`)
-        .then((resulte: IUser[]) => {
+        .then((resulte: UserType[]) => {
           resolve(resulte)
         })
         .catch((error: string) => {
@@ -24,12 +25,12 @@ class UserModel extends BaseModel implements IModel {
     })
   }
 
-  public getById(_id: number): Promise<any[] | string> {
+  public getById(_id: number): Promise<UserType | string> {
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM user WHERE id = ?`, [_id])
-        .then((results: any[]) => {
-          resolve(results)
+        .then(([result]: UserType[]) => {
+          resolve(result)
         })
         .catch((error: string) => {
           {
@@ -39,14 +40,14 @@ class UserModel extends BaseModel implements IModel {
     })
   }
 
-  public getByColumn(_target: object): Promise<any[] | string> {
+  public getByColumn(_target: object): Promise<UserType[] | string> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM user WHERE ${column} = ?`, [value])
-        .then((results: any[]) => {
+        .then((results: UserType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -55,7 +56,7 @@ class UserModel extends BaseModel implements IModel {
     })
   }
 
-  public create(_values: object): Promise<object | string> {
+  public create(_values: IUser): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "user")
 
     return new Promise((resolve, reject) => {
@@ -71,13 +72,23 @@ class UserModel extends BaseModel implements IModel {
   }
 
   public update(_values: IUser): Promise<object | string> {
-    const [query, values] = this.getUpdateQuery(_values, "user")
-
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute(query, values)
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_values.id)
+        .then((exists) => {
+          if (exists) {
+            const [query, values] = this.getUpdateQuery(_values, "user")
+
+            this.connection
+              .execute(query, values)
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("User does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)
@@ -87,10 +98,20 @@ class UserModel extends BaseModel implements IModel {
 
   public delete(_id: number): Promise<object | string> {
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute("DELETE FROM user WHERE id = ?", [_id])
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_id)
+        .then((exists) => {
+          if (exists) {
+            this.connection
+              .execute(`DELETE FROM user WHERE id = ?`, [_id])
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("User does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)

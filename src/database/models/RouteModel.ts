@@ -2,6 +2,7 @@ import { RouteType } from "../../types/Route"
 import IConnection from "../connection/IConnection.ts"
 import BaseModel from "./BaseModel.ts"
 import IModel from "../models/IModel.ts"
+import Route from "../../route/entities/Route.ts"
 
 class RouteModel extends BaseModel implements IModel {
   connection: IConnection
@@ -45,12 +46,12 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public getById(_id: number): Promise<any[] | string> {
+  public getById(_id: number): Promise<RouteType | string> {
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM route WHERE id`, [_id])
-        .then((results: any[]) => {
-          resolve(results)
+        .then(([result]: RouteType[]) => {
+          resolve(result)
         })
         .catch((error: string) => {
           reject(error)
@@ -58,14 +59,14 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public getByColumn(_target: object): Promise<any[] | string> {
+  public getByColumn(_target: object): Promise<RouteType[] | string> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM route WHERE ${column} = ?`, [value])
-        .then((results: any[]) => {
+        .then((results: RouteType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -74,7 +75,7 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public create(_values: object): Promise<object | string> {
+  public create(_values: Route): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "route")
 
     return new Promise((resolve, reject) => {
@@ -89,14 +90,24 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public update(_values: object): Promise<object | string> {
-    const [query, values] = this.getUpdateQuery(_values, "route")
-
+  public update(_values: RouteType): Promise<object | string> {
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute(query, values)
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_values.id)
+        .then((exists) => {
+          if (exists) {
+            const [query, values] = this.getUpdateQuery(_values, "route")
+
+            this.connection
+              .execute(query, values)
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("Route does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)
@@ -106,10 +117,20 @@ class RouteModel extends BaseModel implements IModel {
 
   public delete(_id: number): Promise<object | string> {
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute(`DELETE FROM route WHERE id = ?`, [_id])
-        .then((results: object) => {
-          resolve(results)
+      this.getById(_id)
+        .then((exists) => {
+          if (exists) {
+            this.connection
+              .execute(`DELETE FROM route WHERE id = ?`, [_id])
+              .then((results: object) => {
+                resolve(results)
+              })
+              .catch((error: string) => {
+                reject(error)
+              })
+          } else {
+            reject("Route does not exists")
+          }
         })
         .catch((error: string) => {
           reject(error)

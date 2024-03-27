@@ -8,6 +8,7 @@ import RouteModel from "../database/models/RouteModel.ts"
 import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
 import PointModel from "../database/models/PointModel.ts"
+import Route from "../route/entities/Route.ts"
 
 class RouteController {
   private model: IModel
@@ -21,15 +22,15 @@ class RouteController {
   public getAll = (req: Request, res: Response) => {
     this.model
       .getAll()
-      .then((results) => {
-        results = results.map((val: RouteType) => {
-          const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: RouteType = val
+      .then((results: RouteType[]) => {
+        const newResults: Route[] = results.map((val: RouteType) => {
+          const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
           return RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
         })
 
-        res.send(BaseResponse.success(results))
+        res.send(BaseResponse.success(newResults))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -37,10 +38,10 @@ class RouteController {
   public getById = (req: Request, res: Response) => {
     this.model
       .getById(req.body.id)
-      .then((response) => {
+      .then((response: Route) => {
         res.send(BaseResponse.success(response))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -48,10 +49,15 @@ class RouteController {
   public getByColumn = (req: Request, res: Response) => {
     this.model
       .getByColumn(req.body)
-      .then((response) => {
-        res.send(BaseResponse.success(response))
+      .then((results: RouteType[]) => {
+        const newResults: Route[] = results.map((val: RouteType) => {
+          const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
+          return RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+        })
+
+        res.send(BaseResponse.success(newResults))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -106,10 +112,10 @@ class RouteController {
 
     this.model
       .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude })
-      .then((response) => {
+      .then(() => {
         res.send(BaseResponse.success(null, "Route updated successfully"))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
@@ -119,10 +125,10 @@ class RouteController {
 
     this.model
       .delete(id)
-      .then((response) => {
+      .then(() => {
         res.send(BaseResponse.success(null, "Route deleted successfully"))
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(BaseResponse.error(error))
       })
   }
