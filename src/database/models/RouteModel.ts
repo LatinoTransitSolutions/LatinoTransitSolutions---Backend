@@ -12,30 +12,34 @@ class RouteModel extends BaseModel implements IModel {
     this.connection = _connection
   }
 
-  public getAll(): Promise<RouteType[] | string> {
+  public getAll(_column?: string, _value?: any): Promise<RouteType[] | string> {
+    const where = _column ? `WHERE ${_column} = ${_value}` : ""
+
     return new Promise((resolve, reject) => {
       this.connection
         .execute(
           `
-          SELECT 
-          route.name,
-          route.description,
-          route.type,
-          route.price,
-          route.approved,
-          route.status,
-          spoint.name as startPointName,
-          epoint.name as endPointName,
-          scoord.latitude as startLatitude,
-          scoord.longitude as startLongitude,
-          ecoord.latitude as endLatitude,
-          ecoord.longitude as endLongitude
-          FROM route
-          INNER JOIN point as spoint ON spoint.id = route.startPointID
-          INNER JOIN point as epoint ON epoint.id = route.endPointID
-          INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
-          INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
-        `
+            SELECT 
+            route.id,
+            route.name,
+            route.description,
+            route.type,
+            route.price,
+            route.approved,
+            route.status,
+            spoint.name as startPointName,
+            epoint.name as endPointName,
+            scoord.latitude as startLatitude,
+            scoord.longitude as startLongitude,
+            ecoord.latitude as endLatitude,
+            ecoord.longitude as endLongitude
+            FROM route
+            INNER JOIN point as spoint ON spoint.id = route.startPointID
+            INNER JOIN point as epoint ON epoint.id = route.endPointID
+            INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
+            INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
+            ${where}
+          `
         )
         .then((results: RouteType[]) => {
           resolve(results)
@@ -64,8 +68,7 @@ class RouteModel extends BaseModel implements IModel {
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
-      this.connection
-        .execute(`SELECT * FROM route WHERE ${column} = ?`, [value])
+      this.getAll(column, value)
         .then((results: RouteType[]) => {
           resolve(results)
         })

@@ -7,6 +7,7 @@ import IModel from "../database/models/IModel"
 import UserModel from "../database/models/UserModel"
 import UserService from "../services/UserService.ts"
 import IUser from "../user/interface/IUser.ts"
+import { createToken } from "../utils/auth.ts"
 
 class UserController {
   private model: IModel
@@ -33,12 +34,12 @@ class UserController {
 
   public getById = (req: Request, res: Response) => {
     this.model
-      .getById(req.body.id)
+      .getById(Number(req.query.id))
       .then((response: IUser) => {
         res.send(BaseResponse.success(response))
       })
       .catch((error: string) => {
-        console.log(BaseResponse.error(error))
+        res.send(BaseResponse.error(error))
       })
   }
 
@@ -54,7 +55,7 @@ class UserController {
         res.send(BaseResponse.success(newResults))
       })
       .catch((error: string) => {
-        console.log(BaseResponse.error(error))
+        res.send(BaseResponse.error(error))
       })
   }
 
@@ -66,8 +67,9 @@ class UserController {
     if (user) {
       this.model
         .create(user)
-        .then(() => {
-          res.send(BaseResponse.success(null, "User created successfully"))
+        .then(({ insertId }) => {
+          const savedUser = { ...user, id: Number(insertId) }
+          res.send(BaseResponse.success({ token: createToken(savedUser), user: savedUser }, "User created successfully"))
         })
         .catch((error: string) => {
           console.log(error)
@@ -87,7 +89,7 @@ class UserController {
         res.send(BaseResponse.success(null, "User updated successfully"))
       })
       .catch((error: string) => {
-        console.log(BaseResponse.error(error))
+        res.send(BaseResponse.error(error))
       })
   }
 
@@ -100,8 +102,20 @@ class UserController {
         res.send(BaseResponse.success(null, "User deleted successfully"))
       })
       .catch((error: string) => {
-        console.log(BaseResponse.error(error))
+        res.send(BaseResponse.error(error))
       })
+  }
+
+  public login = (req: Request, res: Response) => {
+    const { email, password }: NewUserType = req.body
+
+    this.model.getByColumn({ email }).then(([userFound]: UserType[]) => {
+      if (userFound && userFound.password === password) {
+        res.send(BaseResponse.success({ token: createToken(userFound), user: userFound }))
+      } else {
+        res.send(BaseResponse.error("User not found"))
+      }
+    })
   }
 }
 

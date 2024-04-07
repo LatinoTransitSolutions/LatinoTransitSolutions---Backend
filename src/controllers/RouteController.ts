@@ -24,8 +24,8 @@ class RouteController {
       .getAll()
       .then((results: RouteType[]) => {
         const newResults: Route[] = results.map((val: RouteType) => {
-          const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
-          return RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
+          return RouteService.createRouteEntity(id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
         })
 
         res.send(BaseResponse.success(newResults))
@@ -62,11 +62,28 @@ class RouteController {
       })
   }
 
+  public getPendingRoutes = (req: Request, res: Response) => {
+    this.model
+      .getByColumn({ approved: false })
+      .then((results: RouteType[]) => {
+        const newResults: Route[] = results.map((val: RouteType) => {
+          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
+          return RouteService.createRouteEntity(id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
+  }
+
   public create = async (req: Request, res: Response) => {
     try {
       const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: NewRouteType = req.body
 
       const route = RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+
       if (!route) {
         return res.send(BaseResponse.error("Unexpected route type"))
       }
@@ -100,9 +117,9 @@ class RouteController {
         startPointID: startPointId,
         endPointID: endPointId
       })
+
       res.send(BaseResponse.success(null, "Route created successfully"))
     } catch (error) {
-      console.log(error)
       res.send(BaseResponse.error(error))
     }
   }
@@ -114,6 +131,19 @@ class RouteController {
       .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude })
       .then(() => {
         res.send(BaseResponse.success(null, "Route updated successfully"))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
+  }
+
+  public approveRoute = (req: Request, res: Response) => {
+    const { id }: RouteType = req.body
+
+    this.model
+      .update({ id, approved: true })
+      .then(() => {
+        res.send(BaseResponse.success(null, "Route approved successfully"))
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
