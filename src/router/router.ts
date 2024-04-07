@@ -27,7 +27,7 @@ const router: Router = Router()
 router.use(cors({ origin: "http://localhost:3000" }))
 
 /**
- * Se le dice al router que use las rutas del cityRouter con un prefijo "/city"
+ * Se le dice al router que use las rutas con un prefijo "/entity"
  */
 router.use("/auth", authRouter)
 router.use("/transport", transportRouter)

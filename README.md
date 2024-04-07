@@ -19,6 +19,6 @@
 
 ### ⚠ Nota Importante
 
-Implementamos un mecanismo de autenticación por Bearer Token, por lo tanto es importante revisar que en cada consulta de Postman, en el apartado de Authorization esté el "Type" como Bearer Token.
+Implementamos un mecanismo de autenticación por Bearer Token, por lo tanto es importante revisar que en cada consulta de Postman, en el apartado de **Authorization** esté el "Type" como Bearer Token.
 
 Luego de eso hay que ejecutar la consulta llamada **login (POST)** la cual devolverá un token que se debe copiar y pegar en la variable de entorno **token** para que la autenticación funcione bien y se puedan hacer las consultas
