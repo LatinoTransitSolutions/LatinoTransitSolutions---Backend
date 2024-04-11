@@ -1,5 +1,5 @@
 enum RouteType {
-  LONG_ROUTE = "long",
+  LARGE_ROUTE = "large",
   MEDIUM_ROUTE = "medium",
   SHORT_ROUTE = "short"
 }
