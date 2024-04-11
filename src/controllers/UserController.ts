@@ -33,10 +33,8 @@ class UserController {
   }
 
   public getById = (req: Request, res: Response) => {
-    const { id }: UserType = req.body
-
     this.model
-      .getById(id)
+      .getById(Number(req.params.id))
       .then((response: IUser) => {
         res.send(BaseResponse.success(response))
       })
