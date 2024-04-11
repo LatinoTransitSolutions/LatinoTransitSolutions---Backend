@@ -45,7 +45,7 @@ class RouteConcreteBuilder implements IRouteBuilder {
   }
 
   getRoute(): Route {
-    return new Route(this.id, this.name, this.description, this.type, this.price, this.approved, this.status, this.startPoint, this.endPoint)
+    return new Route(this.id, this.name, this.description, this.type, this.price, this.approved, this.startPoint, this.endPoint)
   }
 }
 

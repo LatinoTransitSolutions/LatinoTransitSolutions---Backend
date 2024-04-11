@@ -34,7 +34,7 @@ class UserController {
 
   public getById = (req: Request, res: Response) => {
     this.model
-      .getById(Number(req.query.id))
+      .getById(Number(req.params.id))
       .then((response: IUser) => {
         res.send(BaseResponse.success(response))
       })

@@ -62,16 +62,12 @@ class RouteController {
       })
   }
 
-  public getPendingRoutes = (req: Request, res: Response) => {
-    this.model
-      .getByColumn({ approved: false })
-      .then((results: RouteType[]) => {
-        const newResults: Route[] = results.map((val: RouteType) => {
-          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
-          return RouteService.createRouteEntity(id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
-        })
-
-        res.send(BaseResponse.success(newResults))
+  public getPendingRoutes = async (req: Request, res: Response) => {
+    const routeModel = new RouteModel(this.connection)
+    routeModel
+      .getWithTransports({ approved: false })
+      .then((results: any[]) => {
+        res.send(BaseResponse.success(results))
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
@@ -113,7 +109,6 @@ class RouteController {
         type: route.getType(),
         price: route.getPrice(),
         approved: route.getApproved(),
-        status: route.getStatus(),
         startPointID: startPointId,
         endPointID: endPointId
       })

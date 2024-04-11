@@ -26,7 +26,6 @@ class RouteModel extends BaseModel implements IModel {
             route.type,
             route.price,
             route.approved,
-            route.status,
             spoint.name as startPointName,
             epoint.name as endPointName,
             scoord.latitude as startLatitude,
@@ -69,6 +68,54 @@ class RouteModel extends BaseModel implements IModel {
 
     return new Promise((resolve, reject) => {
       this.getAll(column, value)
+        .then((results: RouteType[]) => {
+          resolve(results)
+        })
+        .catch((error: string) => {
+          reject(error)
+        })
+    })
+  }
+
+  public getWithTransports(_target: object): Promise<RouteType[] | string> {
+    const column = this.getColumns(_target)[0]
+    const value = this.getValues(_target)[0]
+
+    const where = column ? `WHERE ${column} = ${value}` : ""
+
+    return new Promise((resolve, reject) => {
+      this.connection
+        .execute(
+          `
+          SELECT
+          route.id,
+          route.name,
+          route.description,
+          route.type,
+          route.price,
+          transport.type as transportName,
+          transport.name as transportType,
+          transport.maxWeight as transportMaxWeight,
+          transport.maxLength as transportMaxLength,
+          transport.maxHeight as transportMaxHeight,
+          transport.maxWidth as transportMaxWidth,
+          transport.plate as transportPlate,
+          spoint.name as startPointName,
+          epoint.name as endPointName,
+          scoord.latitude as startLatitude,
+          scoord.longitude as startLongitude,
+          ecoord.latitude as endLatitude,
+          ecoord.longitude as endLongitude
+          FROM route
+          INNER JOIN trip ON trip.idRoute = route.id
+          INNER JOIN transport ON trip.idTransport = transport.id
+          INNER JOIN point as spoint ON spoint.id = route.startPointID
+          INNER JOIN point as epoint ON epoint.id = route.endPointID
+          INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
+          INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
+          ${where}
+        `
+        )
         .then((results: RouteType[]) => {
           resolve(results)
         })

@@ -9,18 +9,16 @@ class Route {
   private type: RouteType
   private price: number
   private approved: boolean
-  private status: RouteStatus
   private startPoint: Point
   private endPoint: Point
 
-  constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _status?: RouteStatus, _startPoint?: Point, _endPoint?: Point) {
+  constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _startPoint?: Point, _endPoint?: Point) {
     this.id = _id
     this.name = _name
     this.description = _description
     this.type = _type
     this.price = _price
     this.approved = _approved
-    this.status = _status
     this.startPoint = _startPoint
     this.endPoint = _endPoint
   }
@@ -70,14 +68,6 @@ class Route {
 
   public setApproved(_approved: boolean) {
     this.approved = _approved
-  }
-
-  public getStatus(): RouteStatus {
-    return this.status
-  }
-
-  public setStatus(_status: RouteStatus) {
-    this.status = _status
   }
 
   public getStartPoint(): Point {
