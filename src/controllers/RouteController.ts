@@ -9,8 +9,6 @@ import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
 import PointModel from "../database/models/PointModel.ts"
 import Route from "../route/entities/Route.ts"
-import TransportModel from "../database/models/TransportModel.ts"
-import TripModel from "../database/models/TripModel.ts"
 
 class RouteController {
   private model: IModel
@@ -64,16 +62,12 @@ class RouteController {
       })
   }
 
-  public getPendingRoutes = (req: Request, res: Response) => {
-    this.model
-      .getByColumn({ approved: false })
-      .then((results: RouteType[]) => {
-        const newResults: Route[] = results.map((val: RouteType) => {
-          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
-          return RouteService.createRouteEntity(id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
-        })
-
-        res.send(BaseResponse.success(newResults))
+  public getPendingRoutes = async (req: Request, res: Response) => {
+    const routeModel = new RouteModel(this.connection)
+    routeModel
+      .getWithTransports({ approved: false })
+      .then((results: any[]) => {
+        res.send(BaseResponse.success(results))
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
