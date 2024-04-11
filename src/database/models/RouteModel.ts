@@ -26,7 +26,6 @@ class RouteModel extends BaseModel implements IModel {
             route.type,
             route.price,
             route.approved,
-            route.status,
             spoint.name as startPointName,
             epoint.name as endPointName,
             scoord.latitude as startLatitude,

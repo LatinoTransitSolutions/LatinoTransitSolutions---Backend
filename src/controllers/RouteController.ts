@@ -9,6 +9,8 @@ import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
 import PointModel from "../database/models/PointModel.ts"
 import Route from "../route/entities/Route.ts"
+import TransportModel from "../database/models/TransportModel.ts"
+import TripModel from "../database/models/TripModel.ts"
 
 class RouteController {
   private model: IModel
@@ -113,7 +115,6 @@ class RouteController {
         type: route.getType(),
         price: route.getPrice(),
         approved: route.getApproved(),
-        status: route.getStatus(),
         startPointID: startPointId,
         endPointID: endPointId
       })
