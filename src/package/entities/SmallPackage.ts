@@ -1,5 +1,5 @@
 import { PackageTypes } from "../../enums/PackageTypes";
-import IPackage from "../interfaces/IPackageFactory";
+import IPackage from "../interfaces/IPackage";
 
 class SmallPackage implements IPackage {
     id: number
@@ -12,9 +12,9 @@ class SmallPackage implements IPackage {
     length: number
     weight: number
 
-    constructor(_id: number | undefined = undefined,_type?: PackageTypes, _name?: string, _description?: string, _price?: number, _width?: number, _height?: number, _length?: number, _weight?: number) {
+    constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _price?: number, _width?: number, _height?: number, _length?: number, _weight?: number) {
         this.id = _id
-        this.type = _type
+        this.type = PackageTypes.SMALL
         this.name = _name 
         this.description = _description
         this.price = _price
