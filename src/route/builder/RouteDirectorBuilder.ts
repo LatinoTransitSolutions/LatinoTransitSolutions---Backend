@@ -8,7 +8,7 @@ class RouteDirectorBuilder {
     this.builder.setId(_id)
     this.builder.setName(_name)
     this.builder.setDescription(_description)
-    this.builder.setType(RouteType.LARGE_ROUTE)
+    this.builder.setType(RouteType.LONG_ROUTE)
     this.builder.setPrice(_price)
     this.builder.setApproved(false)
     this.builder.setStartPoint(_startLatitude, _startLongitude)
