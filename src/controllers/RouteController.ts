@@ -3,7 +3,6 @@ import { NewRouteType, RouteType } from "../types/Route"
 import BaseResponse from "../common/BaseResponse.ts"
 
 import IConnection from "../database/connection/IConnection.ts"
-import IModel from "../database/models/IModel.ts"
 import RouteModel from "../database/models/RouteModel.ts"
 import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
@@ -11,7 +10,7 @@ import PointModel from "../database/models/PointModel.ts"
 import Route from "../route/entities/Route.ts"
 
 class RouteController {
-  private model: IModel
+  private model: RouteModel
   private connection: IConnection
 
   constructor(_connection: IConnection) {
@@ -38,7 +37,7 @@ class RouteController {
   public getById = (req: Request, res: Response) => {
     this.model
       .getById(req.body.id)
-      .then((response: Route) => {
+      .then((response: RouteType) => {
         res.send(BaseResponse.success(response))
       })
       .catch((error: string) => {
@@ -63,8 +62,7 @@ class RouteController {
   }
 
   public getPendingRoutes = async (req: Request, res: Response) => {
-    const routeModel = new RouteModel(this.connection)
-    routeModel
+    this.model
       .getWithTransports({ approved: false })
       .then((results: any[]) => {
         res.send(BaseResponse.success(results))

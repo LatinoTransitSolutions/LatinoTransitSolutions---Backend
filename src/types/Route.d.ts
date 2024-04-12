@@ -1,11 +1,10 @@
 export type RouteType = {
-  id: number
+  id?: number
   name: string
   description: string
   type: string
   price: number
   approved: boolean
-  status: string
   startLatitude: string
   startLongitude: string
   endLatitude: string
@@ -13,3 +12,8 @@ export type RouteType = {
 }
 
 export type NewRouteType = Omit<RouteType, "id">
+
+export type CreateRouteType = Pick<RouteType, "name" | "description" | "type" | "price" | "approved"> & {
+  startPointID: number
+  endPointID: number
+}

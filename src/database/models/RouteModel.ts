@@ -1,4 +1,4 @@
-import { RouteType } from "../../types/Route"
+import { CreateRouteType, RouteType } from "../../types/Route"
 import IConnection from "../connection/IConnection.ts"
 import BaseModel from "./BaseModel.ts"
 import IModel from "../models/IModel.ts"
@@ -17,29 +17,7 @@ class RouteModel extends BaseModel implements IModel {
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(
-          `
-            SELECT 
-            route.id,
-            route.name,
-            route.description,
-            route.type,
-            route.price,
-            route.approved,
-            spoint.name as startPointName,
-            epoint.name as endPointName,
-            scoord.latitude as startLatitude,
-            scoord.longitude as startLongitude,
-            ecoord.latitude as endLatitude,
-            ecoord.longitude as endLongitude
-            FROM route
-            INNER JOIN point as spoint ON spoint.id = route.startPointID
-            INNER JOIN point as epoint ON epoint.id = route.endPointID
-            INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
-            INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
-            ${where}
-          `
-        )
+        .execute(`SELECT * FROM view_routes ${where}`)
         .then((results: RouteType[]) => {
           resolve(results)
         })
@@ -77,7 +55,7 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public getWithTransports(_target: object): Promise<RouteType[] | string> {
+  public getWithTransports(_target?: object): Promise<RouteType[] | string> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
@@ -85,37 +63,7 @@ class RouteModel extends BaseModel implements IModel {
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(
-          `
-          SELECT
-          route.id,
-          route.name,
-          route.description,
-          route.type,
-          route.price,
-          transport.type as transportName,
-          transport.name as transportType,
-          transport.maxWeight as transportMaxWeight,
-          transport.maxLength as transportMaxLength,
-          transport.maxHeight as transportMaxHeight,
-          transport.maxWidth as transportMaxWidth,
-          transport.plate as transportPlate,
-          spoint.name as startPointName,
-          epoint.name as endPointName,
-          scoord.latitude as startLatitude,
-          scoord.longitude as startLongitude,
-          ecoord.latitude as endLatitude,
-          ecoord.longitude as endLongitude
-          FROM route
-          INNER JOIN trip ON trip.idRoute = route.id
-          INNER JOIN transport ON trip.idTransport = transport.id
-          INNER JOIN point as spoint ON spoint.id = route.startPointID
-          INNER JOIN point as epoint ON epoint.id = route.endPointID
-          INNER JOIN coordinate as scoord ON scoord.id = spoint.coordinateID
-          INNER JOIN coordinate as ecoord ON ecoord.id = epoint.coordinateID
-          ${where}
-        `
-        )
+        .execute(`SELECT * FROM view_routes_with_transports ${where};`)
         .then((results: RouteType[]) => {
           resolve(results)
         })
@@ -125,7 +73,7 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public create(_values: Route): Promise<object | string> {
+  public create(_values: CreateRouteType): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "route")
 
     return new Promise((resolve, reject) => {
@@ -140,7 +88,7 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
-  public update(_values: RouteType): Promise<object | string> {
+  public update(_values: any): Promise<object | string> {
     return new Promise((resolve, reject) => {
       this.getById(_values.id)
         .then((exists) => {
