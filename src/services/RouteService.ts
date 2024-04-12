@@ -4,21 +4,22 @@ import Coordinate from "../route/entities/Coordinate.ts"
 import Route from "../route/entities/Route.ts"
 
 class RouteService {
-  public static createRouteEntity(_id: number | undefined = undefined, _name: string, _description: string, _price: number, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string): Route {
+  public static createRouteEntity(_id: number | undefined = undefined, _name: string, _description: string, _startLatitude: string, _startLongitude: string, _endLatitude: string, _endLongitude: string, _distance: number): Route {
     const routeBuilder: RouteConcreteBuilder = new RouteConcreteBuilder()
     const routeDirector: RouteDirectorBuilder = new RouteDirectorBuilder(routeBuilder)
 
     let route: Route = null
-    const distance = calculateDistance(_startLatitude, _startLongitude, _endLatitude, _endLongitude)
+    const pricePerKm = 5
+    const price = Math.max(pricePerKm, pricePerKm * _distance)
 
-    if (distance >= 60) {
-      routeDirector.createLongRoute(_id, _name, _description, _price, _startLatitude, _startLongitude, _endLatitude, _endLongitude)
+    if (_distance >= 60) {
+      routeDirector.createLongRoute(_id, _name, _description, price, _startLatitude, _startLongitude, _endLatitude, _endLongitude, _distance)
       route = routeBuilder.getRoute()
-    } else if (distance <= 30 && distance > 10) {
-      routeDirector.createMediumRoute(_id, _name, _description, _price, _startLatitude, _startLongitude, _endLatitude, _endLongitude)
+    } else if (_distance <= 30 && _distance > 10) {
+      routeDirector.createMediumRoute(_id, _name, _description, price, _startLatitude, _startLongitude, _endLatitude, _endLongitude, _distance)
       route = routeBuilder.getRoute()
     } else {
-      routeDirector.createShortRoute(_id, _name, _description, _price, _startLatitude, _startLongitude, _endLatitude, _endLongitude)
+      routeDirector.createShortRoute(_id, _name, _description, price, _startLatitude, _startLongitude, _endLatitude, _endLongitude, _distance)
       route = routeBuilder.getRoute()
     }
 

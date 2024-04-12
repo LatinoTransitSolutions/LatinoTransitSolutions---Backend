@@ -9,11 +9,13 @@ export type RouteType = {
   startLongitude: string
   endLatitude: string
   endLongitude: string
+  distance: number
+  idCarrier: number
 }
 
 export type NewRouteType = Omit<RouteType, "id">
 
-export type CreateRouteType = Pick<RouteType, "name" | "description" | "type" | "price" | "approved"> & {
+export type CreateRouteType = Pick<RouteType, "name" | "description" | "type" | "price" | "approved" | "distance" | "idCarrier"> & {
   startPointID: number
   endPointID: number
 }

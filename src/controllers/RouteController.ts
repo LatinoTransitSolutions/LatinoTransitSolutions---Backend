@@ -23,8 +23,8 @@ class RouteController {
       .getAll()
       .then((results: RouteType[]) => {
         const newResults: Route[] = results.map((val: RouteType) => {
-          const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
-          return RouteService.createRouteEntity(id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+          const { id, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance } = val
+          return RouteService.createRouteEntity(id, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance)
         })
 
         res.send(BaseResponse.success(newResults))
@@ -50,8 +50,8 @@ class RouteController {
       .getByColumn(req.body)
       .then((results: RouteType[]) => {
         const newResults: Route[] = results.map((val: RouteType) => {
-          const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude } = val
-          return RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+          const { name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance } = val
+          return RouteService.createRouteEntity(undefined, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance)
         })
 
         res.send(BaseResponse.success(newResults))
@@ -74,9 +74,9 @@ class RouteController {
 
   public create = async (req: Request, res: Response) => {
     try {
-      const { name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: NewRouteType = req.body
+      const { name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance, idCarrier }: NewRouteType = req.body
 
-      const route = RouteService.createRouteEntity(undefined, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude)
+      const route = RouteService.createRouteEntity(undefined, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance)
 
       if (!route) {
         return res.send(BaseResponse.error("Unexpected route type"))
@@ -108,7 +108,9 @@ class RouteController {
         price: route.getPrice(),
         approved: route.getApproved(),
         startPointID: startPointId,
-        endPointID: endPointId
+        endPointID: endPointId,
+        distance: route.getDistance(),
+        idCarrier
       })
 
       res.send(BaseResponse.success(null, "Route created successfully"))
@@ -118,10 +120,10 @@ class RouteController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude }: RouteType = req.body
+    const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude, distance }: RouteType = req.body
 
     this.model
-      .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude })
+      .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude, distance })
       .then(() => {
         res.send(BaseResponse.success(null, "Route updated successfully"))
       })
