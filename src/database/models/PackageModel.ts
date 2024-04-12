@@ -69,7 +69,7 @@ class PackageModel extends BaseModel implements IModel {
         })
     }
 
-    public async update(_values: PackageType): Promise<object | string> {
+    public async update(_values: any): Promise<object | string> {
         return new Promise((resolve, reject) => {
             this.getById(_values.id)
                 .then((exists) => {
