@@ -8,7 +8,6 @@ import IPackage from "../package/interfaces/IPackage"
 import PackageService from "../services/PackageService"
 import PackageModel from "../database/models/PackageModel"
 
-
 class PackageController {
     private model: IModel
     private connection: IConnection
