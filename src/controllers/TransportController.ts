@@ -60,13 +60,13 @@ class TransportController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: NewTransportType = req.body
+    const { type, name, maxWidth, maxHeight, maxLength, maxWeight, plate, idCarrier }: NewTransportType = req.body
 
     const transport = TransportService.createTransportEntity(undefined, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
 
     if (transport) {
       this.model
-        .create(transport)
+        .create({ ...transport, idCarrier })
         .then(() => {
           res.send(BaseResponse.success(null, "Transport created successfully"))
         })
