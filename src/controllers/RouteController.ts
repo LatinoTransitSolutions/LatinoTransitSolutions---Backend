@@ -8,6 +8,9 @@ import RouteService from "../services/RouteService.ts"
 import CoordinateModel from "../database/models/CoordinateModel.ts"
 import PointModel from "../database/models/PointModel.ts"
 import Route from "../route/entities/Route.ts"
+import TransportRouteModel from "../database/models/TransportRouteModel.ts"
+import RoutesTypes from "../enums/RouteType.ts"
+import { TransportsTypes } from "../enums/Transport.ts"
 
 class RouteController {
   private model: RouteModel
@@ -34,9 +37,25 @@ class RouteController {
       })
   }
 
+  public getMyRoutes = (req: Request, res: Response) => {
+    this.model
+      .getCarrierRoutes(Number(req.params.idCarrier))
+      .then((results: RouteType[]) => {
+        const newResults: Route[] = results.map((val: RouteType) => {
+          const { id, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance } = val
+          return RouteService.createRouteEntity(id, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        res.send(BaseResponse.error(error))
+      })
+  }
+
   public getById = (req: Request, res: Response) => {
     this.model
-      .getById(req.body.id)
+      .getById(Number(req.params.id))
       .then((response: RouteType) => {
         res.send(BaseResponse.success(response))
       })
@@ -46,8 +65,10 @@ class RouteController {
   }
 
   public getByColumn = (req: Request, res: Response) => {
+    const { column, value } = req.params
+
     this.model
-      .getByColumn(req.body)
+      .getByColumn({ [column]: value })
       .then((results: RouteType[]) => {
         const newResults: Route[] = results.map((val: RouteType) => {
           const { name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance } = val
@@ -64,6 +85,17 @@ class RouteController {
   public getPendingRoutes = async (req: Request, res: Response) => {
     this.model
       .getWithTransports({ approved: false })
+      .then((results: any[]) => {
+        res.send(BaseResponse.success(results))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
+  }
+
+  public getAvailableRoutes = async (req: Request, res: Response) => {
+    this.model
+      .getWithTransports({ approved: true })
       .then((results: any[]) => {
         res.send(BaseResponse.success(results))
       })
@@ -155,6 +187,26 @@ class RouteController {
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
+      })
+  }
+
+  public assignTransport = async (req: Request, res: Response) => {
+    const { idCarrier, transport, route } = req.body
+
+    if (route.type === RoutesTypes.LONG_ROUTE && (transport.type === TransportsTypes.WALKING || transport.type === TransportsTypes.MOTORCYCLE)) {
+      res.send(BaseResponse.error("Cant register this transport on a long route"))
+      return
+    }
+
+    const trasportRouteModel = new TransportRouteModel(this.connection)
+
+    trasportRouteModel
+      .create({ idCarrier, idTransport: transport.idTransport, idRoute: route.idRoute })
+      .then(() => {
+        res.send(BaseResponse.success(null, "Transport assigned to route successfully"))
+      })
+      .catch((error: string) => {
+        res.send(BaseResponse.error(error))
       })
   }
 }

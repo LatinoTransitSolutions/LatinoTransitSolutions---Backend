@@ -6,7 +6,7 @@ export type TransportType = {
   maxHeight: number
   maxLength: number
   maxWeight: number
-  plate: string
+  plate?: string
   idCarrier: number
 }
 

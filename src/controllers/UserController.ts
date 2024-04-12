@@ -44,8 +44,10 @@ class UserController {
   }
 
   public getByColumn = (req: Request, res: Response) => {
+    const { column, value } = req.params
+
     this.model
-      .getByColumn(req.body)
+      .getByColumn({ [column]: value })
       .then((results) => {
         const newResults: IUser = results.map((val: UserType) => {
           const { id, name, role, email, password, company } = val
