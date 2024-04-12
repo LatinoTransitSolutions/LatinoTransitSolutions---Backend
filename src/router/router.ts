@@ -15,6 +15,7 @@ import authRouter from "./auth.router.ts"
 import transportRouter from "./transport.router.ts"
 import userRouter from "./user.router.ts"
 import routeRouter from "./route.router.ts"
+import packageRouter from "./package.router.ts"
 
 /**
  * Se crea un objeto tipo Router
@@ -33,5 +34,6 @@ router.use("/auth", authRouter)
 router.use("/transport", transportRouter)
 router.use("/user", userRouter)
 router.use("/route", routeRouter)
+router.use("/route", packageRouter)
 
 export default router
