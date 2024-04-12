@@ -6,7 +6,7 @@ import IConnection from "../database/connection/IConnection"
 import IModel from "../database/models/IModel"
 import IPackage from "../package/interfaces/IPackage"
 import PackageService from "../services/PackageService"
-import PackageModel from "../database/models/packageModel"
+import PackageModel from "../database/models/PackageModel"
 
 
 class PackageController {

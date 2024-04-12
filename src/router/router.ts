@@ -34,6 +34,6 @@ router.use("/auth", authRouter)
 router.use("/transport", transportRouter)
 router.use("/user", userRouter)
 router.use("/route", routeRouter)
-router.use("/route", packageRouter)
+router.use("/package", packageRouter)
 
 export default router
