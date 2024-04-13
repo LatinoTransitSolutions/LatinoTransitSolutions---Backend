@@ -2,7 +2,6 @@ import { CreateRouteType, RouteType } from "../../types/Route"
 import IConnection from "../connection/IConnection.ts"
 import BaseModel from "./BaseModel.ts"
 import IModel from "../models/IModel.ts"
-import Route from "../../route/entities/Route.ts"
 
 class RouteModel extends BaseModel implements IModel {
   connection: IConnection
@@ -18,6 +17,19 @@ class RouteModel extends BaseModel implements IModel {
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM view_routes ${where}`)
+        .then((results: RouteType[]) => {
+          resolve(results)
+        })
+        .catch((error: string) => {
+          reject(error)
+        })
+    })
+  }
+
+  public getCarrierRoutes(_idCarrier: number): Promise<RouteType[] | string> {
+    return new Promise((resolve, reject) => {
+      this.connection
+        .execute(`SELECT * FROM view_routes WHERE idCarrier = ${_idCarrier}`)
         .then((results: RouteType[]) => {
           resolve(results)
         })

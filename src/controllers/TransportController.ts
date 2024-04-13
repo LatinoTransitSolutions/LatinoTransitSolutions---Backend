@@ -2,17 +2,16 @@ import { Request, Response } from "express"
 import { NewTransportType, TransportType } from "../types/Transport"
 import BaseResponse from "../common/BaseResponse.ts"
 
-import Connection from "../database/connection/IConnection.ts"
-import IModel from "../database/models/IModel.ts"
+import IConnection from "../database/connection/IConnection.ts"
 import TransportModel from "../database/models/TransportModel.ts"
 import ITransportPlate from "../transport/product/ITransportPlate.ts"
 import ITransport from "../transport/product/ITransport.ts"
 import TransportService from "../services/TransportService.ts"
 
 class TransportController {
-  private model: IModel
+  private model: TransportModel
 
-  constructor(_connection: Connection) {
+  constructor(_connection: IConnection) {
     this.model = new TransportModel(_connection)
   }
 
@@ -32,10 +31,26 @@ class TransportController {
       })
   }
 
+  public getMyTransports = (req: Request, res: Response) => {
+    this.model
+      .getCarrierTransports(Number(req.params.idCarrier))
+      .then((results: TransportType[]) => {
+        const newResults: (ITransport | ITransportPlate)[] = results.map((val: TransportType) => {
+          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate } = val
+          return TransportService.createTransportEntity(id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        res.send(BaseResponse.error(error))
+      })
+  }
+
   public getById = (req: Request, res: Response) => {
     this.model
-      .getById(req.body.id)
-      .then((response: ITransport | ITransportPlate) => {
+      .getById(Number(req.params.id))
+      .then((response: TransportType) => {
         res.send(BaseResponse.success(response))
       })
       .catch((error: string) => {
@@ -44,8 +59,10 @@ class TransportController {
   }
 
   public getByColumn = (req: Request, res: Response) => {
+    const { column, value } = req.params
+
     this.model
-      .getByColumn(req.body)
+      .getByColumn({ [column]: value })
       .then((results: TransportType[]) => {
         const newResults: (ITransport | ITransportPlate)[] = results.map((val: TransportType) => {
           const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate } = val
@@ -60,13 +77,13 @@ class TransportController {
   }
 
   public create = (req: Request, res: Response) => {
-    const { type, name, maxWidth, maxHeight, maxLength, maxWeight, plate }: NewTransportType = req.body
+    const { type, name, maxWidth, maxHeight, maxLength, maxWeight, plate, idCarrier }: NewTransportType = req.body
 
     const transport = TransportService.createTransportEntity(undefined, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
 
     if (transport) {
       this.model
-        .create(transport)
+        .create({ ...transport, idCarrier })
         .then(() => {
           res.send(BaseResponse.success(null, "Transport created successfully"))
         })

@@ -11,8 +11,9 @@ class Route {
   private approved: boolean
   private startPoint: Point
   private endPoint: Point
+  private distance: number
 
-  constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _startPoint?: Point, _endPoint?: Point) {
+  constructor(_id: number | undefined = undefined, _name?: string, _description?: string, _type?: RouteType, _price?: number, _approved?: boolean, _startPoint?: Point, _endPoint?: Point, _distance?: number) {
     this.id = _id
     this.name = _name
     this.description = _description
@@ -21,6 +22,7 @@ class Route {
     this.approved = _approved
     this.startPoint = _startPoint
     this.endPoint = _endPoint
+    this.distance = _distance
   }
 
   public getId(): number {
@@ -84,6 +86,14 @@ class Route {
 
   public setEndPoint(_endPoint: Point) {
     this.endPoint = _endPoint
+  }
+
+  public getDistance(): number {
+    return this.distance
+  }
+
+  public setDistance(_distance: number) {
+    this.distance = _distance
   }
 }
 
