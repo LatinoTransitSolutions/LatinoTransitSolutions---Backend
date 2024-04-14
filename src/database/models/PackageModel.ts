@@ -1,4 +1,3 @@
-import IPackage from "../../package/interfaces/IPackage";
 import { PackageType } from "../../types/Package";
 import IConnection from "../connection/IConnection";
 import BaseModel from "./BaseModel";
@@ -24,6 +23,19 @@ class PackageModel extends BaseModel implements IModel {
                 })
         })
     }
+
+    public getUserPackages(_idUser: number): Promise<PackageType[] | string> {
+        return new Promise((resolve, reject) => {
+          this.connection
+            .execute(`SELECT * FROM package WHERE idUser = ${_idUser}`)
+            .then((results: PackageType[]) => {
+              resolve(results)
+            })
+            .catch((error: string) => {
+              reject(error)
+            })
+        })
+      }
 
     public getById(_id: number): Promise<PackageType | string> {
         return new Promise((resolve, reject) => {
@@ -54,7 +66,7 @@ class PackageModel extends BaseModel implements IModel {
         })
     }
 
-    public create(_values: IPackage): Promise<object | string> {
+    public create(_values: PackageType): Promise<object | string> {
         const [query, values] = this.getInsertQuery(_values, "package")
 
         return new Promise((resolve, reject) => {
@@ -85,7 +97,7 @@ class PackageModel extends BaseModel implements IModel {
                                 reject(error)
                             })
                     } else {
-                        reject("Package does not exists")
+                        reject("Package does not exist")
                     }
                 })
                 .catch((error: string) => {
@@ -108,7 +120,7 @@ class PackageModel extends BaseModel implements IModel {
                                 reject(error)
                             })
                     } else {
-                        reject("Transport does not exists")
+                        reject("Package does not exist")
                     }
                 })
                 .catch((error: string) => {

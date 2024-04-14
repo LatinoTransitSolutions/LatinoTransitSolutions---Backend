@@ -31,11 +31,28 @@ class PackageController {
             console.log(BaseResponse.error(error))
           })
       }
+
+      public getMyPackages = (req: Request, res: Response) => {
+        this.model
+          .getUserPackages(Number(req.params.idUser))
+          .then((results: PackageType[]) => {
+            const newResults: IPackage[] = results.map((val: PackageType) => {
+              const { id, name, description, price, width, height, length, weight } = val
+              return PackageService.createPackageEntity(id, name, description, price, width, height, length, weight)
+            })
+    
+            res.send(BaseResponse.success(newResults))
+          })
+          .catch((error: string) => {
+            res.send(BaseResponse.error(error))
+          })
+      }
+    
     
       public getById = (req: Request, res: Response) => {
         this.model
-          .getById(req.body.id)
-          .then((response: IPackage) => {
+          .getById(Number(req.params.id))
+          .then((response: PackageType) => {
             res.send(BaseResponse.success(response))
           })
           .catch((error: string) => {
@@ -44,8 +61,10 @@ class PackageController {
       }
     
       public getByColumn = (req: Request, res: Response) => {
+        const { column, value } = req.params
+
         this.model
-          .getByColumn(req.body)
+          .getByColumn({ [column]: value })
           .then((results: PackageType[]) => {
             const newResults: IPackage[] = results.map((val: PackageType) => {
                 const { id, name, description, price, width, height, length, weight } = val
@@ -60,13 +79,12 @@ class PackageController {
       }
     
       public create = (req: Request, res: Response) => {
-        const { name, description, price, width, height, length, weight }: NewPackageType = req.body
+        const { name, description, price, width, height, length, weight, idUser }: NewPackageType = req.body
     
         const packageEntity = PackageService.createPackageEntity(undefined, name, description, price, width, height, length, weight )
-    
         if (packageEntity) {
           this.model
-            .create(packageEntity)
+            .create({ ...packageEntity, idUser })
             .then(() => {
               res.send(BaseResponse.success(null, "Package created successfully"))
             })

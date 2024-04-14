@@ -8,6 +8,7 @@ export type PackageType = {
     height: number
     length: number
     weight: number
+    idUser: number
   }
   
-  export type NewPackageType = Omit<TransportType, "id">
+  export type NewPackageType = Omit<PackageType, "id">

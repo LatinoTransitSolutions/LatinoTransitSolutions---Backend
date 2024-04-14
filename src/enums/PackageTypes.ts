@@ -1,5 +1,5 @@
 export enum PackageTypes {
-    BIG = "big",
+    BIG = "large",
     MEDIUM = "medium",
-    SMALL = "short"
+    SMALL = "small"
 }
