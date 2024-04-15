@@ -7,9 +7,9 @@ class PackageService {
         let packageEntity: IPackage = null
         const volume = getVolume(_width, _height, _length)
 
-        if (volume <= 1000) {
+        if (volume <= 0.072) {
             packageEntity = packageFactory.createPackage('small', _id, _name, _description, _price, _width, _height, _length, _weight)
-        } else if (volume > 1000 && volume <= 5000) {
+        } else if (volume > 0.072 && volume <= 9000) {
             packageEntity = packageFactory.createPackage('medium', _id, _name, _description, _price, _width, _height, _length, _weight)
         } else {
             packageEntity = packageFactory.createPackage('big', _id, _name, _description, _price, _width, _height, _length, _weight)

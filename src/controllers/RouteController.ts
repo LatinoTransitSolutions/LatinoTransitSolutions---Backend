@@ -194,13 +194,13 @@ class RouteController {
     const { idCarrier, transport, route } = req.body
 
     if (route.type === RoutesTypes.LONG_ROUTE && (transport.type === TransportsTypes.WALKING || transport.type === TransportsTypes.MOTORCYCLE)) {
-      res.send(BaseResponse.error("Cant register this transport on a long route"))
+      res.send(BaseResponse.error("Can't register this transport on a long route"))
       return
     }
 
-    const trasportRouteModel = new TransportRouteModel(this.connection)
+    const transportRouteModel = new TransportRouteModel(this.connection)
 
-    trasportRouteModel
+    transportRouteModel
       .create({ idCarrier, idTransport: transport.idTransport, idRoute: route.idRoute })
       .then(() => {
         res.send(BaseResponse.success(null, "Transport assigned to route successfully"))

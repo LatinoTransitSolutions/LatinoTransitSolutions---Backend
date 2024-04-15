@@ -1,9 +1,10 @@
-import { PackageType } from "../../types/Package";
+import { NewTransportType, TransportType } from "../../types/Transport";
+import { NewTripType, TripType } from "../../types/Trip";
 import IConnection from "../connection/IConnection";
 import BaseModel from "./BaseModel";
 import IModel from "./IModel";
 
-class PackageModel extends BaseModel implements IModel {
+class TripModel extends BaseModel implements IModel {
   private connection: IConnection
 
   constructor(_connection: IConnection) {
@@ -11,11 +12,11 @@ class PackageModel extends BaseModel implements IModel {
     this.connection = _connection
   }
 
-  public getAll(): Promise<PackageType[] | string> {
+  getAll(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.connection
-        .execute("SELECT * FROM package")
-        .then((results: PackageType[]) => {
+        .execute("SELECT * FROM trip")
+        .then((results: TripType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -24,24 +25,11 @@ class PackageModel extends BaseModel implements IModel {
     })
   }
 
-  public getUserPackages(_idUser: number): Promise<PackageType[] | string> {
+  getById(_id: number): Promise<TripType | string> {
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM package WHERE idUser = ${_idUser}`)
-        .then((results: PackageType[]) => {
-          resolve(results)
-        })
-        .catch((error: string) => {
-          reject(error)
-        })
-    })
-  }
-
-  public getById(_id: number): Promise<PackageType | string> {
-    return new Promise((resolve, reject) => {
-      this.connection
-        .execute(`SELECT * FROM package WHERE id = ?`, [_id])
-        .then(([result]: PackageType[]) => {
+        .execute(`SELECT * FROM trip WHERE id = ?`, [_id])
+        .then(([result]: TripType[]) => {
           resolve(result)
         })
         .catch((error: string) => {
@@ -50,14 +38,14 @@ class PackageModel extends BaseModel implements IModel {
     })
   }
 
-  public getByColumn(_target: object): Promise<PackageType[] | string> {
+  getByColumn(_target: object): Promise<TripType[]> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM package WHERE ${column} = ?`, [value])
-        .then((results: PackageType[]) => {
+        .execute(`SELECT * FROM trip WHERE ${column} = ?`, [value])
+        .then((results: TripType[]) => {
           resolve(results)
         })
         .catch((error: string) => {
@@ -66,8 +54,26 @@ class PackageModel extends BaseModel implements IModel {
     })
   }
 
-  public create(_values: PackageType): Promise<object | string> {
-    const [query, values] = this.getInsertQuery(_values, "package")
+  public getAvailableTransports (_target?: object): Promise<NewTransportType[] | string> {
+    const column = this.getColumns(_target)[0]
+    const value = this.getValues(_target)[0]
+
+    const where = column ? `WHERE ${column} = ${value}` : ""
+
+    return new Promise((resolve, reject) => {
+      this.connection
+        .execute(`SELECT * FROM view_transports_available ${where};`)
+        .then((results: NewTransportType[]) => {
+          resolve(results)
+        })
+        .catch((error: string) => {
+          reject(error)
+        })
+    })
+  }
+
+  create(_values: TripType): Promise<object | string> {
+    const [query, values] = this.getInsertQuery(_values, "trip")
 
     return new Promise((resolve, reject) => {
       this.connection
@@ -81,12 +87,12 @@ class PackageModel extends BaseModel implements IModel {
     })
   }
 
-  public async update(_values: any): Promise<object | string> {
+  update(_values: TripType): Promise<object | string> {
     return new Promise((resolve, reject) => {
       this.getById(_values.id)
         .then((exists) => {
           if (exists) {
-            const [query, values] = this.getUpdateQuery(_values, "package")
+            const [query, values] = this.getUpdateQuery(_values, "trip")
 
             this.connection
               .execute(query, values)
@@ -97,7 +103,7 @@ class PackageModel extends BaseModel implements IModel {
                 reject(error)
               })
           } else {
-            reject("Package does not exist")
+            reject("Trip does not exists")
           }
         })
         .catch((error: string) => {
@@ -106,13 +112,13 @@ class PackageModel extends BaseModel implements IModel {
     })
   }
 
-  public delete(_id: number): Promise<object | string> {
+  delete(_id: number): Promise<object | string> {
     return new Promise((resolve, reject) => {
       this.getById(_id)
         .then((exists) => {
           if (exists) {
             this.connection
-              .execute(`DELETE FROM package WHERE id = ?`, [_id])
+              .execute(`DELETE FROM trip WHERE id = ?`, [_id])
               .then((results: object) => {
                 resolve(results)
               })
@@ -120,7 +126,7 @@ class PackageModel extends BaseModel implements IModel {
                 reject(error)
               })
           } else {
-            reject("Package does not exist")
+            reject("Trip does not exists")
           }
         })
         .catch((error: string) => {
@@ -130,4 +136,4 @@ class PackageModel extends BaseModel implements IModel {
   }
 }
 
-export default PackageModel
+export default TripModel
