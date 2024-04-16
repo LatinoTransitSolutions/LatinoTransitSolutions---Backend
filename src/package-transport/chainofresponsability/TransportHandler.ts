@@ -1,20 +1,28 @@
-import ITransportStrategy from "../strategy/ITransportStrategy";
+import { PackageType } from "../../types/Package";
+import { TransportType } from "../../types/Transport";
+import IVerificationStrategy from "../strategy/IVerificationStrategy";
+class VerificationChain {
+  private strategies: IVerificationStrategy[] = [];
 
-class TransportHandler {
-    private transportStrategies: ITransportStrategy[] = [];
-  
-    addStrategy(strategy: ITransportStrategy): void {
-      this.transportStrategies.push(strategy);
-    }
-  
-    assignTransport(width: number, height: number, depth: number, weight: number): string {
-      for (const strategy of this.transportStrategies) {
-        if (strategy.canTransportPackage(width, height, depth, weight)) {
-          return strategy.constructor.name; 
-        }
-      }
-      return 'No transport available for the package dimensions';
-    }
+  addStrategy(_strategy: IVerificationStrategy): void {
+    this.strategies.push(_strategy);
   }
 
-  export default TransportHandler
+  canTransportPackage(_package: PackageType, _transports: TransportType[]): TransportType | string {
+    for (const transport of _transports) {
+      let isValid = true
+      for (const strategy of this.strategies) {
+        if (!strategy.verifyPackage(_package, transport)) {
+          isValid = false
+          break; 
+        }
+      }
+      if (isValid) {
+        return transport
+      }
+    }
+    return "No transport available to handle the package"
+  }
+}
+
+export default VerificationChain

@@ -16,6 +16,7 @@ import transportRouter from "./transport.router.ts"
 import userRouter from "./user.router.ts"
 import routeRouter from "./route.router.ts"
 import packageRouter from "./package.router.ts"
+import tripRouter from "./trip.router.ts"
 
 /**
  * Se crea un objeto tipo Router
@@ -35,5 +36,6 @@ router.use("/transport", transportRouter)
 router.use("/user", userRouter)
 router.use("/route", routeRouter)
 router.use("/package", packageRouter)
+router.use("/trip", tripRouter)
 
 export default router

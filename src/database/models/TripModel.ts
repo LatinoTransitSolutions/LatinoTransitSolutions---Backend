@@ -1,5 +1,7 @@
-import { NewTransportType, TransportType } from "../../types/Transport";
-import { NewTripType, TripType } from "../../types/Trip";
+import { PackageType, NewPackageType } from "../../types/Package";
+import { TransportType, NewTransportType } from "../../types/Transport";
+import { TripType, NewTripType } from "../../types/Trip";
+
 import IConnection from "../connection/IConnection";
 import BaseModel from "./BaseModel";
 import IModel from "./IModel";
@@ -54,17 +56,29 @@ class TripModel extends BaseModel implements IModel {
     })
   }
 
-  public getAvailableTransports (_target?: object): Promise<NewTransportType[] | string> {
+  public getAvailableTransports (_target?: object): Promise<TransportType[]> {
     const column = this.getColumns(_target)[0]
     const value = this.getValues(_target)[0]
-
     const where = column ? `WHERE ${column} = ${value}` : ""
 
     return new Promise((resolve, reject) => {
       this.connection
         .execute(`SELECT * FROM view_transports_available ${where};`)
-        .then((results: NewTransportType[]) => {
+        .then((results: TransportType[]) => {
           resolve(results)
+        })
+        .catch((error: string) => {
+          reject("There was an error when recovering the available transports "+error)
+        })
+    })
+  }
+
+  getSelectedPackage(_id: number): Promise<PackageType> {
+    return new Promise((resolve, reject) => {
+      this.connection
+        .execute(`SELECT * FROM package WHERE id = ?`, [_id])
+        .then((result: PackageType) => {
+          resolve(result)
         })
         .catch((error: string) => {
           reject(error)

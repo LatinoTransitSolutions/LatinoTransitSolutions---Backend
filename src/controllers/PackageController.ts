@@ -40,7 +40,6 @@ class PackageController {
               const { id, name, description, price, width, height, length, weight } = val
               return PackageService.createPackageEntity(id, name, description, price, width, height, length, weight)
             })
-    
             res.send(BaseResponse.success(newResults))
           })
           .catch((error: string) => {
