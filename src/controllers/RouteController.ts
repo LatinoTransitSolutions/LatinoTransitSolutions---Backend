@@ -152,10 +152,10 @@ class RouteController {
   }
 
   public update = (req: Request, res: Response) => {
-    const { id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude, distance }: RouteType = req.body
+    const { id, name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance }: RouteType = req.body
 
     this.model
-      .update({ id, name, description, price, startLatitude, startLongitude, endLatitude, endLongitude, distance })
+      .update({ id, name, description })
       .then(() => {
         res.send(BaseResponse.success(null, "Route updated successfully"))
       })
