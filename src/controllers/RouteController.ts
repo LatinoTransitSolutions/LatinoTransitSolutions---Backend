@@ -201,7 +201,7 @@ class RouteController {
     const trasportRouteModel = new TransportRouteModel(this.connection)
 
     trasportRouteModel
-      .create({ idCarrier, idTransport: transport.idTransport, idRoute: route.idRoute })
+      .create({ idCarrier, idTransport: transport.id, idRoute: route.id })
       .then(() => {
         res.send(BaseResponse.success(null, "Transport assigned to route successfully"))
       })
