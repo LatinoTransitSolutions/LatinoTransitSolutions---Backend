@@ -95,7 +95,7 @@ class RouteController {
 
   public getAvailableRoutes = async (req: Request, res: Response) => {
     this.model
-      .getWithTransports({ approved: true })
+      .getWithTransports({ approved: true, available: true })
       .then((results: any[]) => {
         res.send(BaseResponse.success(results))
       })
