@@ -1,14 +1,11 @@
 import { Request, Response } from "express"
 import { NewTripType, TripType } from "../types/Trip"
 import BaseResponse from "../common/BaseResponse"
-import { PackageType } from "../types/Package"
-import { TransportType, NewTransportType } from "../types/Transport"
-
 
 import IConnection from "../database/connection/IConnection"
 import TripService from "../services/TripService"
 import TripModel from "../database/models/TripModel"
-import IPackage from "../package/interfaces/IPackage"
+
 
 class TripController {
   private model: TripModel
@@ -20,19 +17,19 @@ class TripController {
   }
 
   public getAll = (req: Request, res: Response) => {
-    /** this.model
-       .getAll()
-       .then((results: TripType[]) => {
-         const newResults: any[] = results.map((val: TripType) => {
-           const { id, name, description, price, width, height, length, weight } = val
-           return TripService.createPackageEntity(id, name, description, price, width, height, length, weight)
-         })
- 
-         res.send(BaseResponse.success(newResults))
-       })
-       .catch((error: string) => {
-         console.log(BaseResponse.error(error))
-       }) */
+    this.model
+      .getAll()
+      .then((results: TripType[]) => {
+        const newResults: any[] = results.map((val: TripType) => {
+          const { id, name, description, price, width, height, length, weight } = val
+          return TripService.createPackageEntity(id, name, description, price, width, height, length, weight)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
   }
 
   public getMyPackages = (req: Request, res: Response) => {
@@ -81,29 +78,6 @@ class TripController {
          console.log(BaseResponse.error(error))
        })
      */
-  }
-
-  public getAvailableTransports = async (req: Request, res: Response) => {
-    try {
-      const availableTransports: TransportType[] =
-        await this.model.getAvailableTransports({ available: true })
-      res.send(BaseResponse.success(availableTransports))
-      TripService.getTransports(availableTransports)
-    } catch (error) {
-      console.log(BaseResponse.error(error))
-    }
-  }
-
-
-  public getSelectedPackage = async (req: Request, res: Response) => {
-    try {
-      const selectedPackage: PackageType =
-        await this.model.getSelectedPackage(Number(req.params.id))
-      res.send(BaseResponse.success(selectedPackage))
-      TripService.getPackage(selectedPackage)
-    } catch (error) {
-      console.log(BaseResponse.error(error))
-    }
   }
 
   public create = (req: Request, res: Response) => {

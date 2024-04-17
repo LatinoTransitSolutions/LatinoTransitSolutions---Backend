@@ -1,15 +1,19 @@
 import VerificationChain from "../package-transport/chainofresponsability/TransportHandler";
 import SizeStrategy from "../package-transport/strategy/SizeStrategy";
 import WeightStrategy from "../package-transport/strategy/WeightStrategy";
+
 import { PackageType } from "../types/Package";
-import { TransportType, NewTransportType } from "../types/Transport";
+import { NewTripType, TripType } from "../types/Trip";
 
 class TripService {
 
-    static package: PackageType | null = null
-    static transports: TransportType[] | null = null
-  
-    public static addPackageTransport(): TransportType | string{
+    public static createTripEntity(_id: number | undefined = undefined, idClient: number, idPackage: number, idTransportRoute: number ): TripType{
+        return
+    }
+
+    public static addPackageTransport(_package: PackageType, _transports: TransportType ): TransportType | string{
+
+
         const verifySize = new SizeStrategy()
         const verifyWeight = new WeightStrategy()
 
@@ -17,15 +21,12 @@ class TripService {
         verificationChain.addStrategy(verifySize)
         verificationChain.addStrategy(verifyWeight)
 
-        return verificationChain.canTransportPackage(this.package, this.transports)
-    }
-
-    static getTransports(_transports: TransportType[]) {
-        this.transports = _transports
-    }
-
-    static getPackage(_package: PackageType): PackageType {
-        return this.package = _package
+        if(verificationChain.canTransportPackage(_package, _transports)){
+            //return _package
+        } else {
+            //return verificationChain.canTransportPackage(_package, _transports)
+            return "This transport can no handle this package"
+        }
     }
 }
 

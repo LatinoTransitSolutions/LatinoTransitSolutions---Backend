@@ -8,21 +8,14 @@ class VerificationChain {
     this.strategies.push(_strategy);
   }
 
-  canTransportPackage(_package: PackageType, _transports: TransportType[]): TransportType | string {
-    for (const transport of _transports) {
-      let isValid = true
+  canTransportPackage(_package: PackageType, _transports: TransportType): boolean {
       for (const strategy of this.strategies) {
-        if (!strategy.verifyPackage(_package, transport)) {
-          isValid = false
-          break; 
+        if (!strategy.verifyPackage(_package, _transports)) {
+          return false;
         }
       }
-      if (isValid) {
-        return transport
-      }
+      return true;
     }
-    return "No transport available to handle the package"
-  }
 }
 
 export default VerificationChain

@@ -1,5 +1,5 @@
 export type TripType = { 
-    id: number
+    id?: number
     idClient: number        
     idPackage: number         
     idTransportRoute: number  
