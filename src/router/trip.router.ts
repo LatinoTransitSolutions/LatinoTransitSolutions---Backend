@@ -8,7 +8,6 @@ const router: Router = Router()
 const controller = new TripController(MariaDBConnection.getInstance())
 
 router.get("/all", authMiddleware, controller.getAll)
-router.get("/get-my-trips/:idUser", authMiddleware, controller.getMyPackages)
 router.get("/get-by-id/:id", authMiddleware, controller.getById)
 router.get("/get-by-column/:column/:value", authMiddleware, controller.getByColumn)
 router.post("/create", authMiddleware, controller.create)

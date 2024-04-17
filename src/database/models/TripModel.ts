@@ -5,7 +5,7 @@ import BaseModel from "./BaseModel";
 import IModel from "./IModel";
 
 class TripModel extends BaseModel implements IModel {
-  private connection: IConnection
+  connection: IConnection
 
   constructor(_connection: IConnection) {
     super()

@@ -3,17 +3,16 @@ import SizeStrategy from "../package-transport/strategy/SizeStrategy";
 import WeightStrategy from "../package-transport/strategy/WeightStrategy";
 
 import { PackageType } from "../types/Package";
+import { TransportType } from "../types/Transport";
 import { NewTripType, TripType } from "../types/Trip";
 
 class TripService {
 
     public static createTripEntity(_id: number | undefined = undefined, idClient: number, idPackage: number, idTransportRoute: number ): TripType{
-        return
+        return null 
     }
 
     public static addPackageTransport(_package: PackageType, _transports: TransportType ): TransportType | string{
-
-
         const verifySize = new SizeStrategy()
         const verifyWeight = new WeightStrategy()
 

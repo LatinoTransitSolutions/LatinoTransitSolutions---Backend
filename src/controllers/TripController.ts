@@ -21,8 +21,8 @@ class TripController {
       .getAll()
       .then((results: TripType[]) => {
         const newResults: any[] = results.map((val: TripType) => {
-          const { id, name, description, price, width, height, length, weight } = val
-          return TripService.createPackageEntity(id, name, description, price, width, height, length, weight)
+          const { id, idClient, idPackage, idTransportRoute } = val
+          return TripService.createTripEntity(id, idClient, idPackage, idTransportRoute)
         })
 
         res.send(BaseResponse.success(newResults))
@@ -32,58 +32,40 @@ class TripController {
       })
   }
 
-  public getMyPackages = (req: Request, res: Response) => {
-    /**this.model
-      .getUserPackages(Number(req.params.idUser))
-      .then((results: PackageType[]) => {
-        const newResults: IPackage[] = results.map((val: PackageType) => {
-          const { id, name, description, price, width, height, length, weight } = val
-          return TripService.createPackageEntity(id, name, description, price, width, height, length, weight)
-        })
- 
-        res.send(BaseResponse.success(newResults))
+  public getById = (req: Request, res: Response) => {
+    this.model
+      .getById(Number(req.params.id))
+      .then((response: TripType) => {
+        res.send(BaseResponse.success(response))
       })
       .catch((error: string) => {
-        res.send(BaseResponse.error(error))
-      }) */
-  }
-
-
-  public getById = (req: Request, res: Response) => {
-    /** this.model
-       .getById(Number(req.params.id))
-       .then((response: PackageType) => {
-         res.send(BaseResponse.success(response))
-       })
-       .catch((error: string) => {
-         console.log(BaseResponse.error(error))
-       }) */
+        console.log(BaseResponse.error(error))
+      })
   }
 
   public getByColumn = (req: Request, res: Response) => {
-    /**
-     *  const { column, value } = req.params
+    const { column, value } = req.params
 
-     this.model
-       .getByColumn({ [column]: value })
-       .then((results: PackageType[]) => {
-         const newResults: IPackage[] = results.map((val: PackageType) => {
-             const { id, name, description, price, width, height, length, weight } = val
-           return TripService.createPackageEntity(id, name, description, price, width, height, length, weight)
-         })
- 
-         res.send(BaseResponse.success(newResults))
-       })
-       .catch((error: string) => {
-         console.log(BaseResponse.error(error))
-       })
-     */
+    this.model
+      .getByColumn({ [column]: value })
+      .then((results: TripType[]) => {
+        const newResults: TripType[] = results.map((val: TripType) => {
+          const { id, idClient, idPackage, idTransportRoute }  = val
+          return TripService.createTripEntity(id, idClient, idPackage, idTransportRoute)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
   }
 
   public create = (req: Request, res: Response) => {
     /**
-     * const { name, description, price, width, height, length, weight, idUser }: NewTripType = req.body
- 
+     * const { idClient, idPackage, idTransportRoute } = req.body
+
+
     const packageEntity = TripService.createPackageEntity(undefined, name, description, price, width, height, length, weight )
     if (packageEntity) {
       this.model
@@ -101,29 +83,29 @@ class TripController {
   }
 
   public update = (req: Request, res: Response) => {
-    /**const { id, name, description, price, width, height, length, weight }: PackageType = req.body
- 
+    const { id, idClient, idPackage, idTransportRoute }: TripType = req.body
+
     this.model
-      .update({ id, name, description, price, width, height, length, weight })
+      .update({ id, idClient, idPackage, idTransportRoute })
       .then(() => {
-        res.send(BaseResponse.success(null, "Package updated successfully"))
+        res.send(BaseResponse.success(null, "Trip updated successfully"))
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
-      }) */
+      })
   }
 
   public delete = (req: Request, res: Response) => {
-    /**const { id }: PackageType = req.body
+    const { id }: TripType = req.body
  
     this.model
       .delete(id)
       .then(() => {
-        res.send(BaseResponse.success(null, "Package deleted successfully"))
+        res.send(BaseResponse.success(null, "Trip deleted successfully"))
       })
       .catch((error: string) => {
         console.log(BaseResponse.error(error))
-      }) */
+      })
   }
 
 }
