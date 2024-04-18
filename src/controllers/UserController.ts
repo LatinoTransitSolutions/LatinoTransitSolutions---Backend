@@ -3,14 +3,13 @@ import { UserType, NewUserType } from "../types/User"
 import BaseResponse from "../common/BaseResponse.ts"
 
 import IConnection from "../database/connection/IConnection"
-import IModel from "../database/models/IModel"
 import UserModel from "../database/models/UserModel"
 import UserService from "../services/UserService.ts"
 import IUser from "../user/interface/IUser.ts"
 import { createToken } from "../utils/auth.ts"
 
 class UserController {
-  private model: IModel
+  private model: UserModel
 
   constructor(_connection: IConnection) {
     this.model = new UserModel(_connection)
@@ -19,8 +18,8 @@ class UserController {
   public getAll = (req: Request, res: Response) => {
     this.model
       .getAll()
-      .then((results) => {
-        const newResults: IUser = results.map((val: UserType) => {
+      .then((results: UserType[]) => {
+        const newResults = results.map((val: UserType) => {
           const { id, name, role, email, password, company } = val
           return UserService.createUser(id, name, role, email, password, company)
         })
@@ -48,8 +47,8 @@ class UserController {
 
     this.model
       .getByColumn({ [column]: value })
-      .then((results) => {
-        const newResults: IUser = results.map((val: UserType) => {
+      .then((results: UserType[]) => {
+        const newResults = results.map((val: UserType) => {
           const { id, name, role, email, password, company } = val
           return UserService.createUser(id, name, role, email, password, company)
         })
@@ -69,8 +68,8 @@ class UserController {
     if (user) {
       this.model
         .create(user)
-        .then(({ insertId }) => {
-          const savedUser = { ...user, id: Number(insertId) }
+        .then((response: { insertId: number }) => {
+          const savedUser = { ...user, id: Number(response.insertId) }
           res.send(BaseResponse.success({ token: createToken(savedUser), user: savedUser }, "User created successfully"))
         })
         .catch((error: string) => {
