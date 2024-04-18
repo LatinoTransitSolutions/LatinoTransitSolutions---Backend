@@ -68,17 +68,13 @@ class RouteModel extends BaseModel implements IModel {
   }
 
   public getWithTransports(_target?: object): Promise<RouteType[] | string> {
-    const approvedColumn = this.getColumns(_target)[0]
-    const approvedValue = this.getValues(_target)[0]
-
-    const availableColumn = this.getColumns(_target)[1]
-    const availableValue = this.getValues(_target)[1]
-
-    const where = approvedColumn ? `WHERE ${approvedColumn} = ${approvedValue} AND ${availableColumn} = ${availableValue}` : ""
+    const columns = this.getColumns(_target)
+    const values = this.getValues(_target)
+    const whereClause = columns.length ? "WHERE " + columns.map((col, i) => `${col} = ${values[i]}`).join(" AND ") : ""
 
     return new Promise((resolve, reject) => {
       this.connection
-        .execute(`SELECT * FROM view_routes_with_transports ${where};`)
+        .execute(`SELECT * FROM view_routes_with_transports ${whereClause};`)
         .then((results: RouteType[]) => {
           resolve(results)
         })
