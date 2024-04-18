@@ -1,11 +1,10 @@
 import { Request, Response } from "express"
-import { NewTripType, TripType } from "../types/Trip"
+import { TripType } from "../types/Trip"
 import BaseResponse from "../common/BaseResponse"
 
 import IConnection from "../database/connection/IConnection"
 import TripService from "../services/TripService"
 import TripModel from "../database/models/TripModel"
-
 
 class TripController {
   private model: TripModel
@@ -24,7 +23,6 @@ class TripController {
           const { id, idClient, idPackage, idTransportRoute } = val
           return TripService.createTripEntity(id, idClient, idPackage, idTransportRoute)
         })
-
         res.send(BaseResponse.success(newResults))
       })
       .catch((error: string) => {
@@ -50,7 +48,7 @@ class TripController {
       .getByColumn({ [column]: value })
       .then((results: TripType[]) => {
         const newResults: TripType[] = results.map((val: TripType) => {
-          const { id, idClient, idPackage, idTransportRoute }  = val
+          const { id, idClient, idPackage, idTransportRoute } = val
           return TripService.createTripEntity(id, idClient, idPackage, idTransportRoute)
         })
 
@@ -62,24 +60,21 @@ class TripController {
   }
 
   public create = (req: Request, res: Response) => {
-    /**
-     * const { idClient, idPackage, idTransportRoute } = req.body
+    const { idClient, idTransportRoute, package: packageEntity, transport } = req.body
 
-
-    const packageEntity = TripService.createPackageEntity(undefined, name, description, price, width, height, length, weight )
-    if (packageEntity) {
+    const canHandlePackage = TripService.canHandlePackage(packageEntity, transport)
+    if (canHandlePackage) {
       this.model
-        .create({ ...packageEntity, idUser })
+        .create({ idClient, idPackage: packageEntity.id, idTransportRoute })
         .then(() => {
-          res.send(BaseResponse.success(null, "Package created successfully"))
+          res.send(BaseResponse.success(null, "Trip created successfully"))
         })
         .catch((error: string) => {
           res.send(BaseResponse.error(error))
         })
     } else {
-      res.send(BaseResponse.error("Unexpected package type"))
+      res.send(BaseResponse.error("Package can not be handle for this transport"))
     }
-     */
   }
 
   public update = (req: Request, res: Response) => {
@@ -97,7 +92,7 @@ class TripController {
 
   public delete = (req: Request, res: Response) => {
     const { id }: TripType = req.body
- 
+
     this.model
       .delete(id)
       .then(() => {
