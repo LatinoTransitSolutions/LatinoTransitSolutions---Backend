@@ -1,4 +1,3 @@
-import RouteStatus from "../../enums/RouteStatus.ts"
 import RouteType from "../../enums/RouteType.ts"
 import Route from "../entities/Route.ts"
 
