@@ -5,6 +5,9 @@ import BaseResponse from "../common/BaseResponse"
 import IConnection from "../database/connection/IConnection"
 import TripService from "../services/TripService"
 import TripModel from "../database/models/TripModel"
+import PackageModel from "../database/models/PackageModel"
+import { PackageType } from "../types/Package"
+import RouteModel from "../database/models/RouteModel"
 
 
 class TripController {
@@ -62,14 +65,13 @@ class TripController {
   }
 
   public create = (req: Request, res: Response) => {
-    /**
-     * const { idClient, idPackage, idTransportRoute } = req.body
+     const { idClient, idTransportRoute, package: packageEntity, transport } = req.body
+    
+    const verify = TripService.canHandlePackage( packageEntity, transport)
 
-
-    const packageEntity = TripService.createPackageEntity(undefined, name, description, price, width, height, length, weight )
-    if (packageEntity) {
+    if (verify) {
       this.model
-        .create({ ...packageEntity, idUser })
+        .create({ idClient, idPackage: packageEntity.id , idTransportRoute })
         .then(() => {
           res.send(BaseResponse.success(null, "Package created successfully"))
         })
@@ -79,7 +81,6 @@ class TripController {
     } else {
       res.send(BaseResponse.error("Unexpected package type"))
     }
-     */
   }
 
   public update = (req: Request, res: Response) => {
