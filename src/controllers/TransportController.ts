@@ -47,6 +47,22 @@ class TransportController {
       })
   }
 
+  public getMyUnassignedTransports = (req: Request, res: Response) => {
+    this.model
+      .getCarrierTransports(Number(req.params.idCarrier), true)
+      .then((results: TransportType[]) => {
+        const newResults: (ITransport | ITransportPlate)[] = results.map((val: TransportType) => {
+          const { id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate } = val
+          return TransportService.createTransportEntity(id, type, name, maxWidth, maxHeight, maxLength, maxWeight, plate)
+        })
+
+        res.send(BaseResponse.success(newResults))
+      })
+      .catch((error: string) => {
+        res.send(BaseResponse.error(error))
+      })
+  }
+
   public getById = (req: Request, res: Response) => {
     this.model
       .getById(Number(req.params.id))

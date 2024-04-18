@@ -104,6 +104,17 @@ class RouteController {
       })
   }
 
+  public getTransportsRoute = async (req: Request, res: Response) => {
+    this.model
+      .getTransportsRoute(Number(req.params.idRoute))
+      .then((results: any[]) => {
+        res.send(BaseResponse.success(results))
+      })
+      .catch((error: string) => {
+        console.log(BaseResponse.error(error))
+      })
+  }
+
   public create = async (req: Request, res: Response) => {
     try {
       const { name, description, startLatitude, startLongitude, endLatitude, endLongitude, distance, idCarrier }: NewRouteType = req.body

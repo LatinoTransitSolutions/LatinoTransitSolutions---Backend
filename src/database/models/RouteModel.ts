@@ -84,6 +84,19 @@ class RouteModel extends BaseModel implements IModel {
     })
   }
 
+  public getTransportsRoute(_idRoute: number): Promise<RouteType[] | string> {
+    return new Promise((resolve, reject) => {
+      this.connection
+        .execute(`SELECT * FROM view_transports_route WHERE idRoute = ${_idRoute};`)
+        .then((results: RouteType[]) => {
+          resolve(results)
+        })
+        .catch((error: string) => {
+          reject(error)
+        })
+    })
+  }
+
   public create(_values: CreateRouteType): Promise<object | string> {
     const [query, values] = this.getInsertQuery(_values, "route")
 
