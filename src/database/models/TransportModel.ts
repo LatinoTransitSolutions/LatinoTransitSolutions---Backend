@@ -1,5 +1,3 @@
-import ITransportPlate from "../../transport/product/ITransportPlate.ts"
-import ITransport from "../../transport/product/ITransport.ts"
 import { TransportType } from "../../types/Transport"
 
 import IConnection from "../connection/IConnection.ts"
@@ -30,7 +28,7 @@ class TransportModel extends BaseModel implements IModel {
   public getCarrierTransports(_idCarrier: number, _isUnassigned: boolean = false): Promise<TransportType[] | string> {
     return new Promise((resolve, reject) => {
       const whereClause = "AND id NOT IN (SELECT idTransport FROM transport_route)"
-      console.log(`SELECT * FROM transport WHERE idCarrier = ${_idCarrier} ${_isUnassigned ? whereClause : ""}`)
+
       this.connection
         .execute(`SELECT * FROM transport WHERE idCarrier = ${_idCarrier} ${_isUnassigned ? whereClause : ""}`)
         .then((results: TransportType[]) => {
