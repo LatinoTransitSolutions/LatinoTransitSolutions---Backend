@@ -7,7 +7,7 @@ class WeightStrategy implements IVerificationStrategy {
 
   verifyPackage(_package: PackageType, _transport: TransportType): boolean {
     return (
-      _package.weight >= _transport.maxWeight
+      _package.weight <= _transport.maxWeight
     )
   }
 }
